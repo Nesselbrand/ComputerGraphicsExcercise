@@ -81,9 +81,9 @@ function abs_c(x) {
 function f_c(z, c) {
     // TODO 1.4a):      Compute the result of function f_c for a given z and
     //                  a given c. Use the complex helper functions.
-
-
     return add_c(mult_c(z, z), c);
+
+
 }
 
 function countIterationsNaive(start_z, c, max_iter) {
@@ -92,10 +92,10 @@ function countIterationsNaive(start_z, c, max_iter) {
     //                  is greater than 2. If the sequence does not diverge during
     //                  the first max_iter iterations, return max_iter. Use
     //                  function f_c().
-    let z = start_z;
-    for (let i = 0; i < max_iter; i++) {
+    let z = new ComplexNumber(start_z.re, start_z.im);
+    for(let i = 0; i < max_iter; i++){
         z = f_c(z, c);
-        if (abs_c(z) > 2.0) return i;
+        if(abs_c(z) > 2) return i+1;
     }
     return max_iter;
 }
@@ -105,7 +105,16 @@ function countIterationsNoBanding(start_z, c, max_iter) {
     //                  change the return value to avoid banding. 
     //                  Use http://linas.org/art-gallery/escape/smooth.html
     //                  as reference.
-
+    let z = new ComplexNumber(start_z.re, start_z.im);
+    for(let i = 1; i <= max_iter; i++){
+        z = f_c(z, c);
+        const r = abs_c(z);
+        if(r > 2){
+            let mu = (i + 1) - Math.log(Math.log(r)) / Math.log(2);
+            return mu;
+        }
+    }
+    return max_iter;
 
 
 }
@@ -134,6 +143,9 @@ function getColorForIter(iter, max_iter, color_scheme_index) {
     // return color according to chosen color scheme
     let color = new Vec(128, 128, 128);
 
+
+    if (iter >= max_iter) return new Vec(0, 0, 0);
+    let t = Math.max(0, Math.min(1, iter / max_iter));
     
     if (colorscheme == "black & white") {
         // TODO 1.4a):      Return the correct color for the iteration count
@@ -141,11 +153,12 @@ function getColorForIter(iter, max_iter, color_scheme_index) {
         //                  numbers for which the sequence diverges should be
         //                  shaded white. Use the given parameter max_iter.
 
-    if (iter == max_iter) {
-        color = new Vec(0, 0, 0);   // Im Set → schwarz
-    } else {
-        color = new Vec(255, 255, 255); // Divergiert → weiß
-    }
+        if (iter == max_iter) {
+            color = new Vec(0, 0, 0);
+        } else {
+            color = new Vec(255, 255, 255);
+        }
+
 
     } else if (colorscheme == "greyscale") {
         // TODO 1.4b):      Choose a greyscale color according to the given
@@ -153,7 +166,8 @@ function getColorForIter(iter, max_iter, color_scheme_index) {
         //                  iteration count. The more iterations are needed
         //                  for divergence, the darker the color should be.
         //                  Be aware of integer division!
-
+        const v = Math.round(255 * (1 - t));
+        return new Vec(v, v, v);
 
 
     } else if (colorscheme == "underwater") {
@@ -162,7 +176,9 @@ function getColorForIter(iter, max_iter, color_scheme_index) {
         //                  maximum iteration count. The more iterations are
         //                  needed for divergence, the more green and less
         //                  blue the color should be.
-
+        const g = Math.round(255 * t);
+        const b = Math.round(255 * (1 - t));
+        return new Vec(0, g, b);
 
 
     } else { // rainbow
@@ -173,7 +189,8 @@ function getColorForIter(iter, max_iter, color_scheme_index) {
         //                  red, yellow and green back to cyan (for lots of
         //                  needed iterations). Use the HSV model and convert
         //                  HSV to RGB colors using function hsv2rgb.
-
+        const hue = (180 + 360 * t) % 360;
+        return hsv2rgb(new Vec(hue, 1, 1));
 
     }
     return color;
@@ -184,14 +201,30 @@ function hsv2rgb(hsv) {
     let s = hsv.g;
     let v = hsv.b;
 
+    if (s === 0) {
+        const val = Math.round(v * 255);
+        return new Vec(val, val, val);
+    }
 
-    // TODO 1.4b):      Replace the following line by code performing the
-    //                  HSV to RGB conversion known from the lecture.
-    let rgb = new Vec(255, 255, 255);
+    h = (h % 360 + 360) % 360;
+    const c  = v * s;
+    const hp = h / 60;
+    const x  = c * (1 - Math.abs((hp % 2) - 1));
 
+    let r1=0, g1=0, b1=0;
+    if      (0 <= hp && hp < 1) { r1=c; g1=x; b1=0; }
+    else if (1 <= hp && hp < 2) { r1=x; g1=c; b1=0; }
+    else if (2 <= hp && hp < 3) { r1=0; g1=c; b1=x; }
+    else if (3 <= hp && hp < 4) { r1=0; g1=x; b1=c; }
+    else if (4 <= hp && hp < 5) { r1=x; g1=0; b1=c; }
+    else                        { r1=c; g1=0; b1=x; }
 
-
-    return rgb;
+    const m = v - c;
+    return new Vec(
+        Math.round((r1 + m) * 255),
+        Math.round((g1 + m) * 255),
+        Math.round((b1 + m) * 255)
+    );
 }
 
 /////////////////////////////////////
@@ -202,17 +235,27 @@ function mandelbrotSet(image, id, max_iter, color_scheme_index, use_naive_getIte
     for (let i = 0; i < 4 * image.width * image.height; i += 4) {
         let pixel = i / 4;
         let x = pixel % image.width;
-        let y = Math.floor(pixel / image.width);
+        let y = image.height - pixel / image.width;
         let c = new ComplexNumberFromCoords(x, y, id, false);
-        let z0 = new ComplexNumber(0, 0);
-
-        if (use_naive_getIter == null) use_naive_getIter = false;
+        if (use_naive_getIter == null) {
+            use_naive_getIter = false;
+        }
+        // select correct countInteraions verion for the current canvas
         let countIterations = use_naive_getIter ? countIterationsNaive : countIterationsNoBanding;
 
-        let iter = countIterations(z0, c, max_iter);
-        let rgb = getColorForIter(iter, max_iter, color_scheme_index);
+        // TODO 1.4a):      Replace the following line with the computation
+        //                  of the Mandelbrot set. Use the countIterations() 
+        //                  and getColorForIter() functions (keep in mind that
+        //                  you will need to pass the given 'max_iter' and
+        //                  'color_scheme_index' where required).
 
-        image.data[i + 0] = rgb.r;
+        let iterations = countIterations(new ComplexNumber(0,0), c, max_iter);
+
+
+        let rgb = getColorForIter(iterations, max_iter, color_scheme_index);
+
+
+        image.data[i] = rgb.r;
         image.data[i + 1] = rgb.g;
         image.data[i + 2] = rgb.b;
         image.data[i + 3] = 255;
@@ -231,7 +274,9 @@ function juliaSet(image, id, max_iter, juliaC, color_scheme_index, use_naive_get
         //                  Use the functions ComplexNumberFromCoords(),
         //                  countIterations() and getColorForIter().
 
-        let rgb = new Vec(128, 128, 128);
+        const z0 = new ComplexNumberFromCoords(x, y , id, true);
+        const iter = countIterations(z0, juliaC, max_iter);
+        const rgb = getColorForIter(iter, max_iter, color_scheme_index);
 
 
         image.data[i] = rgb.r;
@@ -309,7 +354,7 @@ function setupMandelbrot(canvas) {
 
         // TODO 1.4c):      Uncomment the following line to enable zooming.
 
-        //canvas.addEventListener('wheel', onMouseWheel, false);
+        canvas.addEventListener('wheel', onMouseWheel, false);
 
         // make relevant function accessible to wrapper for testing callback implementation
         window.setupMandelbrot = setupMandelbrot;
@@ -397,7 +442,8 @@ function startMoveCanvas(mandel_canvas_id, mouse_x, mouse_y, ctrl = false, shift
         //                  The variables dragging (bool) and lastPoint 
         //                  (two dimensional vector) are stored as 
         //                  canvas attributes below.
-
+        dragging = true;
+        lastPoint = new Vec(x,y);
 
         mandel_canvas.setAttribute("var_lastPoint", str(lastPoint));
         mandel_canvas.setAttribute("var_dragging", dragging);
@@ -443,6 +489,11 @@ function updateMoveCanvas(canvas_id, mouse_x, mouse_y) {
         //                  Also update lastPoint with the current point
         //                  to make movement more controllable.
 
+        const lastC = new ComplexNumberFromCoords(lastPoint.x, lastPoint.y, canvas_id, false);
+        const currC = new ComplexNumberFromCoords(x, y, canvas_id, false);
+        const delta = sub_c(lastC, currC);
+        center = add_c(center, delta);
+        lastPoint = new Vec(x, y);
 
 
         // store new center and lastPoint
@@ -466,7 +517,7 @@ function endMoveCanvas(canvas_id) {
     //                  <value> with the new dragging value.
 
     // canvas.setAttribute("var_dragging", <value>);
-
+    canvas.setAttribute("var_dragging", false);
 
 }
 
