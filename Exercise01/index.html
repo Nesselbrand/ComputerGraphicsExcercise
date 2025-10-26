@@ -1,0 +1,862 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/css/print.css">
+    <!-- explicitly set absent favicon to avoid error message with live server -->
+    <link rel="icon" href="data:,">
+
+    <meta name="lecture" content="Computer Graphics">
+    <meta name="exercisePrefix" content="Exercise">
+    <meta name="exerciseNr" content="1">
+    <meta name="term" content="Winter Term 2025/26">
+    <meta name="dueDate" content="October 27, 2025, 23:55">
+
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript" src="./resources/js/num.js"></script>
+    <script type="text/javascript" src="./resources/js/FileSaver.js"></script>
+    <script type="text/javascript" src="./resources/js/jszip.js"></script>
+    <script type="text/javascript" src="./resources/js/dispatcher.js"></script>
+    <script type="text/javascript" src="./resources/js/sheet.js"></script>
+</head>
+
+<body>
+    <!-- global lists to help when saving the solution images TODO check if this can be removed by using the gernetSkeleton script? -->
+    <script>
+        // specify submission canvas ids that need to be saved to binaries (this will be done everytime the page is refreshed!)
+        //window.saveIDsToBinaryList = ["canvas1a-1", "canvas1a-2", "canvas1a-3", "canvas1b-1", "canvas1b-2", "canvas1b-3", "canvas1c-1", "canvas1c-2", "canvas1c-3"];
+        window.saveIDsToBinaryList = ["canvas4a-1", "canvas4a-2", "canvas4a-3", "canvas4b-1", "canvas4b-2", "canvas4b-3", "canvas4b-4", "canvas4c-1", "canvas4c-2", "canvas4c-3", "canvas4d-1", "canvas4d-2", "canvas4d-3"];
+    </script>
+    <script>
+        // specify submission (gl) canvas ids that need to be saved to images (right click is not possible unfortunatly)
+        window.saveGLIDsToImageList = [];
+    </script>
+
+    <!-- initialize session storage, if not yet populated -->
+    <script>
+        if (!sessionStorage.getItem("settings-linear-scale")) { sessionStorage.setItem("settings-linear-scale", 1.0); }
+    </script>
+
+    <page size="A4">
+            <content>
+
+				<h2> Welcome! </h2>
+                <p>
+                    Hello and welcome to the Computer Graphics Exercises.
+					This preface will introduce you to the two types of exercises, the distribution and submission system, the correction method, and the programming languages and rendering frameworks used for the assignments.
+                </p>
+
+                <h2> Exercise Types</h2>
+                <p>
+                    We provide two modes of operation.
+                </p>
+                <ul>
+                    <li>
+                        In the first mode, you only have to work on the <b>Basic Exercises</b>.
+                        You are required to complete <b>50%</b> of the Basic Exercises to be allowed to participate in the final examination and receive <b>5 ECTS</b>.
+                    </li>
+                    <li>
+                        The second mode includes the <b>Basic Exercises</b> and additionally the <b>Advanced Exercises</b>.
+                        The combined course earns you <b>7.5 ECTS</b> if you complete at least <b>50% of each part</b> (Basic and Advanced).
+                    </li>
+                </ul>
+
+                <h2> Exercise Distribution and Submission</h2>
+                <p>
+                    Distribution and submission of exercises is done via the Computer Graphics course on <a href="https://www.studon.fau.de/studon/go/crs/6454373">StudOn</a>.
+                    Exercise sheets will be released on <b>Monday</b> (or Thursday before, if possible), starting from the second week after the start of the lecture.
+                    You have <b>one week</b> to complete the assignments; they are due on Monday of the following week.
+                </p>
+			    <p>
+                    All exercise sheets using JavaScript are to be worked on and submitted <b>individually</b>.
+                    This includes all Basic exercises except Basic exercise 8, which will use the Godot game engine where you are allowed (and encouraged) to submit in <b>groups of two</b>.
+                    The Advanced exercises 1 and 2 will start analogously to the Basic exercises using JavaScript and are to be submitted <b>individually</b>.
+                    From Advanced assignment 3 onward, we will switch to C++ and OpenGL, where submissions in <b>groups of two</b> will be mandatory.
+
+                    You can create a team for each submission in StudOn. Only one member of the team needs to submit, subsequent submissions will overwrite the previous submissions for all team members.
+                    <!-- Please note that for practical reasons, we can only consider group submissions. -->
+                    Feel free to use the <a href="https://www.studon.fau.de/studon/go/frm/6630900">Forum</a> on StudOn to look for team members and let us know ahead of time if it is not possible to submit as a group, for example if there's not enough people in the course or someone dropped out.
+                </p>
+			    <p>
+                    To hand in your solution, please use the <code>zip basic/advanced submission</code> button on top of the page and submit the resulting ZIP file to the respective exercise StudOn.
+                    Do not modify the file names or folder structures!
+                    You will be awarded points via StudOn, as well.
+                </p>
+                
+				<h2> Exercise Tutoring </h2>
+                <p>
+                    Tutoring is done in two ways:
+                    <ul>
+                        <li>
+                            We provide <b>on-site tutorials</b> on Thursdays from 09:00-12:00 in CIP3 and CIP4.
+                            You can work on the exercises from there, while there are tutors around to answer your questions directly.
+                            <!-- If you can not catch a tutor right away, please use the CIPMAP <a href="https://cipmap.cs.fau.de/cip3">https://cipmap.cs.fau.de/cip3</a>  -->
+                            <!-- or <a href="https://cipmap.cs.fau.de/cip4">https://cipmap.cs.fau.de/cip4</a> to queue in if you have a question. -->
+                        </li>
+                        <li>
+                            During the <b>rest of the week</b>, it is still possible to ask questions in the <a href="https://www.studon.fau.de/studon/go/frm/6630900">Forum</a> on StudOn.
+                            Other students or tutors will try to help you (as soon as their schedule allows).
+                            While not instantaneous, you will not be left alone with a question if posted sufficiently ahead of a deadline.
+                        </li>
+                    </ul>
+                </p>
+
+				<h2>Development Tools</h2>
+                <p>
+                    The exercises will be done in <b>HTML</b> and <b>JavaScript</b>, so you will work directly inside the exercise sheets.
+                    All assignments are tested on <b>Firefox</b> and in the computer pools (CIP), compatibility for other browsers and computers are not guaranteed.
+                    During the first weeks, we will only use the HTML canvas and create 2D images using JavaScript.
+                    Later on, we will focus on 3D rendering using <b>WebGL</b> and - during the Advanced Exercises - also <b>C++</b> and <b>OpenGL</b>.
+                    If you do not know C++ yet, the <a href="https://www.studon.fau.de/cat2005704.html">C++ Tutorials</a> might be a good resource for you to prepare for the assignments.
+                    The Basic part of the exercises can be worked on in the browser, whereas the Advanced part will impose some PC requirements due to the use of C++ and OpenGL.
+                    We will try to help you running these exercises on your own machines, but we once again cannot give any guarantees outside of the CIP pools.
+                </p>
+			    <p>
+					Once you have opened the index.html file you should be able to look at the <b>Console</b> by pressing F12 or Ctrl+Shift+K.
+                    There you see the message <i>"This is an exemplary log!"</i>.
+                    Search for the corresponding source code to find out how to put debug information onto the console.
+					The most helpful tool besides the console is the <b>debugger</b>, which is located next to the console tab.
+                    You can place breakpoints in JavaScript code to debug your programs.
+				</p>
+                <p>
+					For easier development, we recommend software like the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server">LiveServer</a> extension for Visual Studio Code, for example.
+                    It automatically reloads the page as soon as files have changed and accessing files from a webpage without a server is considered unsafe and can lead to errors.
+				</p>
+
+                <h2> Correction </h2>
+                <p>
+                    To be able to correctly run the exercises, you may have to change some settings in the Firefox configurations.
+                    If you encounter an error saying "Cross-Origin Request Blocked" on the console and nothing is loaded, you can either setup a server (e.g. <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server">LiveServer</a> extension for Visual Studio Code) or set <b>security.fileuri.strict_origin_policy</b> to false in the Firefox config.
+                    Access the Firefox config by typing <b>about:config</b> into the Firefox bar in a new tab, hit enter and skip the warning.
+                    <b>You should revert this setting after you're done with the exercises for security reasons!</b>
+                    It might be required to refresh the index.html page several times after that to apply the changes and make everything work.
+                    If your tab or browser crashes, simply reload the file.
+                </p>
+                <p>
+                    The exercises will be checked for correctness automatically, both for the Basic and Advanced Exercises, until you use OpenGL in the Advanced Exercises.
+                    For each subtask, e.g. 1.1a), you can see your current implementation on the left, the expected solution in the middle and the difference between the two on the right.
+                    To get points for a test case, your own solution should look identical to the solution and the difference should be zero, i.e. completely black.
+                    For each test case there is a threshhold of pixels that may differ from the solution, written below the difference canvas.
+                    As long as your amount of false pixels is below the threshold, you will be awarded the points for this test case.
+                    The reference system for the exercises (and grading) are the computers in the CIP pools.
+                    <b>Note:</b> It is impossible to support every possible combination of browser, operating system, and GPU vendor/driver, thus some small differences between the solution and your code can not be avoided in some cases, especially for heavy WebGL rendering.
+                    When in doubt, use Firefox on the machines in the CIP pools!
+                </p>
+                <p>
+                    Use the <code>DIFFERENCE COLOR</code> buttons on top of the page to toggle the colors in the difference canvas between binary and linear. 
+                    Binary mode will always be used to evaluate your solution, linear is a helper to see in which areas and channels the error is large or small during debugging.
+                    You can use the slider below to scale the error in linear mode in case it is too small to see.
+                    There will be no private test cases, only the public ones you can see.
+                    This means that you will be awarded the same number of points that are shown to you on the page.
+                    To show the other test cases, click on <code>Click here to show the other test cases!</code>.
+                    The points you get for each test case are shown below the test case.
+                    Your points are summarized in a table on top of the page. 
+                    Click a row in the table to jump to the corresponding subtask.
+                </p>
+
+                <h2> Contact </h2>
+                <p>
+					Feel free to contact us via <a href="mailto:nikolai.hofmann@fau.de">email</a> (for organizational questions), or via the <a href="https://www.studon.fau.de/studon/go/frm/6630900">Forum</a> on StudOn, or in person during the tutorials (for content related questions).
+                </p>
+            </content>
+    </page>
+
+
+    <page size="A4">
+            <content>
+                <exercise prefix="Basic Exercises" title="2D Graphics" points=10>
+
+                    <table class="pointsTable floatLeft" type="basic"></table>
+
+                    <form class="differenceColor">
+                        <fieldset class="differenceColor">
+                            <h1>Difference Color</h1>
+                            <div>
+                                <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="basic" checked>
+                                <label for="settings-binary"> binary </label><br>
+                                <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="basic">
+                                <label for="settings-linear"> linear </label><br>
+                                <label for="settings-linear-scale-adv"> Linear difference scale: <span id="settings-linear-scale-print-adv"></span></label><br>
+                                <input type="range" id="settings-linear-scale-adv" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                                <script>
+                                    document.getElementById("settings-linear-scale-adv").value = sessionStorage.getItem('settings-linear-scale');
+                                    document.getElementById("settings-linear-scale-print-adv").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                    document.getElementById("settings-linear-scale-adv").oninput = function() {
+                                        sessionStorage.setItem("settings-linear-scale", this.value)
+                                        document.getElementById("settings-linear-scale-print-adv").innerHTML = this.value;
+                                    }
+                                </script>
+                              </div>
+  
+                        </fieldset>
+                    </form>
+
+                    <button class="zipButton" type="basic" onclick="zipAndDownload('Basic')"> zip basic submission </button>
+
+                    <task title="Draw Circles by Directly Filling the Framebuffer" points=6 submitfile="Basic1.js">
+
+                        <canvas class="floatLeft" id="canvas1" width=200 height=200 data-call="drawIntoCanvas" data-call-src="./Basic/Example.js"><img class="wait"></canvas>
+
+                        <p>
+                            Left you see a HTML element of type <code>canvas</code> (size: 200x200) that you can draw into.
+                            Inspect the source code of this assignment sheet and have a look at the JavaScript code referring to <code>canvas1</code>.
+                            To complete this task, you can copy and modify the snippet which colors the whole canvas in light blue.
+                        </p>
+                        <p>
+                            In this task, you should first draw a green circle by setting the pixel colors of a canvas. 
+                            In the next steps, you will first add a contour and then smooth the borders between color transitions to avoid aliasing.
+                        </p>
+
+                        <p class="clearLeft">
+                            Below you see the three circles you should generate in subtasks a) to c).
+                            The left circle is light green for all pixels, while the circle in the middle features an additonal contour in a darker shade of green.
+                            Both circles have a rather ragged border, which is a symptom of aliasing.
+                            You can enlarge the page to better observe the image artifacts.
+                            The right circle has smooth transitions which can be computed by weighting and mixing colors.
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr>
+                                <td><img src="images/sol1a-1.png" /></td>
+                                <td><img src="images/sol1b-1.png" /></td>
+                                <td><img src="images/sol1c-1.png" /></td>
+                            </tr>
+                        </table>
+
+                        <!-- ------------------------------------------------------------------------------------------------------------- -->
+
+
+                        <subtask title="Draw a Circle" points=2 type="basic">
+                            <p>
+                                Copy and modify the code from <code>Example.js</code> and draw an opaque circle with the given radius and center.
+                                Color the pixels inside the circle with the given color and leave the rest white.
+                            </p>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-1" width=200 height=200 data-call="drawPixelwiseCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(100,100) data-call-p1=50 data-call-p2=vec(0,255,0,255)></canvas></td>
+                                    <td><canvas id="sol1a-1" src="images/sol1a-1.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-1" data-call-p1="sol1a-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+
+                            <details>
+                                <summary>Click here to show the other test cases!</summary>
+
+                                <table class="centerContent boxes">
+                                    <caption> Testcase: Different center and color. </caption>
+                                    <tr> 
+                                        <th><b>Your code</b></th>
+                                        <th><b>Solution</b></th>
+                                        <th><b>Difference</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><canvas id="canvas1a-2" width=200 height=200 data-call="drawPixelwiseCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(25,125) data-call-p1=50 data-call-p2=vec(255,0,255,255)></canvas></td>
+                                        <td><canvas id="sol1a-2" src="images/sol1a-2.bin" width="200" height="200"></canvas></td>
+                                        <td><canvas id="diff1a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-2" data-call-p1="sol1a-2" data-call-p2="0.5" data-call-p3="100"></canvas></td>
+                                    </tr>
+                                </table>
+
+                                <table class="centerContent boxes">
+                                    <caption> Testcase: Different center and radius. </caption>
+                                    <tr> 
+                                        <th><b>Your code</b></th>
+                                        <th><b>Solution</b></th>
+                                        <th><b>Difference</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><canvas id="canvas1a-3" width=200 height=200 data-call="drawPixelwiseCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(50,50) data-call-p1=25 data-call-p2=vec(0,255,0,255)></canvas></td>
+                                        <td><canvas id="sol1a-3" src="images/sol1a-3.bin" width="200" height="200"></canvas></td>
+                                        <td><canvas id="diff1a-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-3" data-call-p1="sol1a-3" data-call-p2="0.5" data-call-p3="100"></canvas></td>
+                                    </tr>
+                                </table>
+                            </details>
+
+                        </subtask>
+
+                        <subtask title="Draw a Circle with Contour" points=2 type="basic">
+                            <p>
+                                Extend your solution by adding a contour with given pixel width in a contour color. 
+                                One half of the contour should be inside the initial circle, the other half outside.
+                            </p>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1b-1" width=200 height=200 data-call="drawContourCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(100,100) data-call-p1=45 data-call-p2=16 data-call-p3=vec(0,255,0,255) data-call-p4=vec(0,127,0,255)></canvas></td>
+                                    <td><canvas id="sol1b-1" src="images/sol1b-1.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-1" data-call-p1="sol1b-1" data-call-p2="1" data-call-p3="300"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <details>
+                                <summary>Click here to show the other test cases!</summary>
+
+                                <table class="centerContent boxes">
+                                    <caption> Testcase: Different radius and contour width. </caption>
+                                    <tr> 
+                                        <th><b>Your code</b></th>
+                                        <th><b>Solution</b></th>
+                                        <th><b>Difference</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><canvas id="canvas1b-2" width=200 height=200 data-call="drawContourCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(100,100) data-call-p1=60 data-call-p2=4 data-call-p3=vec(0,255,0,255) data-call-p4=vec(0,127,0,255)></canvas></td>
+                                        <td><canvas id="sol1b-2" src="images/sol1b-2.bin" width="200" height="200"></canvas></td>
+                                        <td><canvas id="diff1b-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-2" data-call-p1="sol1b-2" data-call-p2="0.5" data-call-p3="300"></canvas></td>
+                                    </tr>
+                                </table>
+
+                                <table class="centerContent boxes">
+                                    <caption> Testcase: Different colors and center. </caption>
+                                    <tr> 
+                                        <th><b>Your code</b></th>
+                                        <th><b>Solution</b></th>
+                                        <th><b>Difference</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><canvas id="canvas1b-3" width=200 height=200 data-call="drawContourCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(130,130) data-call-p1=45 data-call-p2=16 data-call-p3=vec(0,255,255,255) data-call-p4=vec(0,127,127,255)></canvas></td>
+                                        <td><canvas id="sol1b-3" src="images/sol1b-3.bin" width="200" height="200"></canvas></td>
+                                        <td><canvas id="diff1b-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-3" data-call-p1="sol1b-3" data-call-p2="0.5" data-call-p3="300"></canvas></td>
+                                    </tr>
+                                </table>
+                            </details>
+                        </subtask>
+
+                        <subtask title="Draw a Smooth Circle with Contour" points=2 type="basic">
+                            <p>
+                                You will notice the jagged contours in the sample solution images and in your solutions.
+                                This effect stems from the limited screen resolution.
+                            </p>
+                            <p>
+                                Provide a simple solution for smoothing such edges by mixing the colors sensibly.
+                                Choose a one-pixel-wide border on the outer rim of both color transitions and give the pixels interpolated colors, based on their particular distance to the circle center.
+                            </p>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1c-1" width=200 height=200 data-call="drawSmoothCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(100,100) data-call-p1=45 data-call-p2=16 data-call-p3=vec(0,255,0,255) data-call-p4=vec(0,127,0,255) data-call-p5=vec(255,255,255,255)></canvas></td>
+                                    <td><canvas id="sol1c-1" src="images/sol1c-1.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1c-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-1" data-call-p1="sol1c-1" data-call-p2=1 data-call-p3=400></canvas></td>
+                                </tr>
+                            </table>
+
+                            <details>
+                                <summary>Click here to show the other test cases!</summary>
+
+                                <table class="centerContent boxes">
+                                    <caption> Testcase: Different center and contour width. </caption>
+                                    <tr> 
+                                        <th><b>Your code</b></th>
+                                        <th><b>Solution</b></th>
+                                        <th><b>Difference</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><canvas id="canvas1c-2" width=200 height=200 data-call="drawSmoothCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(150,50) data-call-p1=45 data-call-p2=90 data-call-p3=vec(0,255,0,255) data-call-p4=vec(0,127,0,255) data-call-p5=vec(255,255,255,255)></canvas></td>
+                                        <td><canvas id="sol1c-2" src="images/sol1c-2.bin" width="200" height="200"></canvas></td>
+                                        <td><canvas id="diff1c-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-2" data-call-p1="sol1c-2" data-call-p2="0.5" data-call-p3=400></canvas></td>
+                                    </tr>
+                                </table>
+
+                                <table class="centerContent boxes">
+                                    <caption> Testcase: Different colors and radius. </caption>
+                                    <tr> 
+                                        <th><b>Your code</b></th>
+                                        <th><b>Solution</b></th>
+                                        <th><b>Difference</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><canvas id="canvas1c-3" width=200 height=200 data-call="drawSmoothCircle" data-call-src="./Basic/Basic1.js" data-call-p0=vec(100,100) data-call-p1=70 data-call-p2=16 data-call-p3=vec(255,255,0,255) data-call-p4=vec(180,180,0,255) data-call-p5=vec(255,255,255,255)></canvas></td>
+                                        <td><canvas id="sol1c-3" src="images/sol1c-3.bin" width="200" height="200"></canvas></td>
+                                        <td><canvas id="diff1c-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-3" data-call-p1="sol1c-3" data-call-p2="0.5" data-call-p3=400></canvas></td>
+                                    </tr>
+                                </table>
+                            </details>
+                        </subtask>
+                    </task>
+
+<!-- ------------------------------------------------------------------------------------------------------------- -->
+                <task title="Draw Circles using <code>Canvas</code> Utilities" points=2 submitfile="Basic2.js">
+                    <subtask title="Using Canvas Utilities" points=2 type="basic">
+                        <p>
+                        JavaScript provides us with some rendering utilities for drawing primitives, some of which are the <a href="http://www.w3schools.com/tags/canvas_arc.asp"><code>arc()</code> method</a> and the <a href="https://www.w3schools.com/tags/canvas_stroke.asp"><code>stroke()</code> method</a>.
+                          Have a look at the documentation and implement the same circles as before using those methods.
+                          The <a href="https://www.w3schools.com/tags/canvas_linewidth.asp"><code>Canvas lineWidth</code> Property</a> may help you with the Contour.
+                          Instead of rendering into two separate canvases, draw the two circles from Task 1.1 into the same render area this time. Use the given <code>vec_to_string(color)</code> function to convert the color vector to a CSS color value. Draw the circles clockwise!
+                        </p>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2a-1" width=200 height=200 data-call="drawArcCircle" data-call-src="./Basic/Basic2.js" data-call-p0=vec(60,60) data-call-p1=vec(140,140) data-call-p2=50 data-call-p3=50 data-call-p4=16 data-call-p5=vec(0,255,0,255) data-call-p6=vec(0,255,0,255) data-call-p7=vec(0,127,0,255)></canvas></td>
+                                <td><canvas id="sol2a-1-bin" width=200 height=200 src="images/sol2a-1.bin"></canvas></td>
+                                <td><canvas id="diff2a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-1" data-call-p1="sol2a-1-bin" data-call-p2="1" data-call-p3="1000"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+
+                            <table class="centerContent boxes">
+                                <caption> Testcase: Different centers and radii. </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2a-2" width=200 height=200 data-call="drawArcCircle" data-call-src="./Basic/Basic2.js" data-call-p0=vec(120,80) data-call-p1=vec(40,160) data-call-p2=70 data-call-p3=25 data-call-p4=16 data-call-p5=vec(0,255,0,255) data-call-p6=vec(0,255,0,255) data-call-p7=vec(0,127,0,255)></canvas></td>
+                                    <td><canvas id="sol2a-2-bin" width=200 height=200 src="images/sol2a-2.bin"></canvas></td>
+                                    <td><canvas id="diff2a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-2" data-call-p1="sol2a-2-bin" data-call-p2="0.5" data-call-p3="1000"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <caption> Testcase: Different colours and contour width. </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2a-3" width=200 height=200 data-call="drawArcCircle" data-call-src="./Basic/Basic2.js" data-call-p0=vec(60,60) data-call-p1=vec(140,140) data-call-p2=50 data-call-p3=50 data-call-p4=20 data-call-p5=vec(0,255,255,255) data-call-p6=vec(255,0,255,255) data-call-p7=vec(127,0,127,255)></canvas></td>
+                                    <td><canvas id="sol2a-3-bin" width=200 height=200 src="images/sol2a-3.bin"></canvas></td>
+                                    <td><canvas id="canvas2-diff-testcase2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-3" data-call-p1="sol2a-3-bin" data-call-p2="0.5" data-call-p3="1000"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+
+<!-- ------------------------------------------------------------------------------------------------------------- -->
+                <task title="Draw Circles using SVG" points=2 submitfile="Basic3.html">
+                <subtask title="Using SVG" points=2 type="basic">
+                  <p>
+                    Replicate the two circles from the previous subtask using SVG, the parameters are given in the HTML file.
+                    You will notice that vector graphics do not suffer from the same aliasing problems as your rasterized circles.
+                    The drawing is independent of resolution and the interpolation of color values is handled by the SVG drawing engine.
+                  </p>
+
+                    <table class="centerContent boxes">
+                        <tr> 
+                            <th><b>Your code</b></th>
+                            <th><b>Solution</b></th>
+                            <th><b>Difference</b></th>
+                        </tr>
+                        <tr>
+                            <td><iframe id="canvas3a-1" width=200 height=200 marginheight="0" marginwidth="0" src="./Basic/Basic3.html" scrolling="no"></iframe></td>
+                            <td><canvas id="sol3a-1-bin" width=200 height=200></canvas></td>
+                            <td><canvas id="diff3a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-1" data-call-p1="sol3a-1-bin" data-call-p2=2 data-call-p3="1000"></canvas></td>
+                        </tr>
+                    </table>
+                </subtask>
+                </task>
+              </exercise>
+            </content>
+    </page>
+
+
+
+    <page size="A4">
+            <content>
+              <exercise prefix="Advanced Exercises" title="2D Graphics for Procedural Images" points=10>
+
+                <table class="pointsTable floatLeft" type="advanced"></table>
+
+                <form class="differenceColor">
+                    <fieldset class="differenceColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="advanced" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="advanced">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale"> Linear difference scale: <span id="settings-linear-scale-print"></span></label><br>
+                            <input type="range" id="settings-linear-scale" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="zipButton" type="advanced" onclick="zipAndDownload('Advanced')"> zip advanced submission </button>
+
+                <!-- ------------------------------------------------------------------------------------------------------------- -->
+                <task title="Render Mandelbrot and Julia Sets" points=10  submitfile="Advanced.js">
+                  <p>Now that you know the HTML class <code>canvas</code>, it is time to draw something even more beautiful than the circle from <i>Basic Exercise 1</i>.  </p>
+                  <table class="boxes">
+                      <tr>
+                          <td>
+                              <img src="images/Mandelbrot_1.png" />
+                          </td>
+                          <td>
+                              <img src="images/Mandelbrot_2.png" />
+                          </td>
+                          <td>
+                              <img src="images/Mandelbrot_3.png" />
+                          </td>
+                          <td>
+                              <img src="images/Mandelbrot_4.png" />
+                          </td>
+                      </tr>
+                  </table>
+
+                  <p>
+                      Below, you can see two <code>canvas</code>es. The left one will be filled with a rendering of the so-called Mandelbrot set which you will work on during subtasks a) to c). 
+                      The right one will show so-called Julia sets once you have implemented subtask d).
+                  </p>
+                  <p>
+                      The <a href="https://en.wikipedia.org/wiki/Mandelbrot_set" target="_blank">Mandelbrot set</a> (named after the Polish mathematician Benoit Mandelbrot) is the set of complex numbers \(c = Re(c) + i \cdot Im(c)\) for which the sequence \((z_n), n \in \mathbb{N}\) converges.
+                      The sequence is given by the following formula:
+                      \begin{align}
+                      z_0 &= 0 \\
+                      z_{n+1} &= f_c(z_n) = z_n^2 + c
+                      \end{align}
+                  </p>
+                  <p>
+                      The <a href="https://en.wikipedia.org/wiki/Julia_set" target="_blank">Julia sets</a> (named after the french mathematician Gaston Julia) implemented in subtask d) are sets of complex numbers closely related to the Mandelbrot set and also generated in a similar manner, using function \(f_c\).
+                  </p>
+                  <p>
+                      Even though the above formula does not look like magic or art at the first sight, the pictures produced by its application (interpreting pixels of the two-dimensional plane as complex numbers) exhibit great beauty,
+                      as you can see in the example pictures above. Your task will be to implement an interactive rendering tool for the Mandelbrot set (and, later on, for Julia sets) to explore its bizarre, yet gorgeous silhouette.
+                  </p>
+
+                  <center><table class="boxes">
+                      <tr>
+                          <td>
+                              <center>Mandelbrot set</center>
+                              <canvas id="mandelbrot_canvas" width=297 height=198 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=30 data-call-p1="-0.5, 0" data-call-p2=0></canvas>
+                          </td>
+                          <td>
+                              <center>Julia set</center>
+                              <canvas id="julia_canvas" width=198 height=198 data-call="setupJulia" data-call-src="./Advanced/Advanced.js" data-call-p0=30 data-call-p1="0.4, 0.1"></canvas>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <form>
+                                  <fieldset>
+                                      <h1>Color Scheme</h1>
+                                      <div>
+                                        <input type="radio" id="black &amp; white" name="colors" value="black & white" onclick="onChangeColorScheme('mandelbrot_canvas', 'julia_canvas');" checked>
+                                        <label for="black &amp; white"> black &amp; white</label><br>
+                                        <input type="radio" id="greyscale" name="colors" value="greyscale" onclick="onChangeColorScheme('mandelbrot_canvas', 'julia_canvas');">
+                                        <label for="greyscale"> greyscale colors</label><br>
+                                        <input type="radio" id="underwater" name="colors" value="underwater" onclick="onChangeColorScheme('mandelbrot_canvas', 'julia_canvas');">
+                                        <label for="underwater"> underwater colors</label><br>
+                                        <input type="radio" id="rainbow" name="colors" value="rainbow" onclick="onChangeColorScheme('mandelbrot_canvas', 'julia_canvas');">
+                                        <label for="rainbow"> HSV rainbow colors</label><br>
+                                      </div>
+                                  </fieldset>
+                              </form>
+                          </td>
+                          <td>
+                              <form>
+                                  <fieldset>
+                                      <h1>Maximum Iterations</h1>
+                                      <div>
+                                        <input type="range" id="slider" min="5" max="100" step="1" value="30" onchange="onChangeMaxIter('mandelbrot_canvas', 'julia_canvas', this.value);" />
+                                      </div>
+                                  </fieldset>
+                              </form>
+                          </td>
+                      </tr>
+                  </table></center>
+
+                  <subtask title="Compute the Mandelbrot Set" points=3 type="advanced">
+                    <p>
+                        The simplest algorithm for visualization of the Mandelbrot set is the so-called <i>Escape Time Algorithm</i>, which uses a fixed amount of iterations to
+                        decide whether the sequence converges (i.e., \(c\) is inside the Mandelbrot set) or diverges (i.e., \(c\) is not inside the Mandelbrot set). The pixels
+                        corresponding to complex numbers inside the set are traditionally given black color, whereas the pixels corresponding to complex numbers not in the set
+                        are shaded white (see testcases below).
+                    </p>
+                    <p>
+                        To produce such a picture, the <code>mandelbrotSet()</code> function is called.
+                        Some helper functions concerning complex numbers (<code>mult_c</code>, <code>add_c</code>, <code>sub_c</code>, <code>abs_c</code>) 
+                        are already given in section <i>Complex Number Helpers</i>, along with two constructors for complex numbers:
+                        <code>ComplexNumber()</code> creates a new complex number with given real and imaginary part, <code>ComplexNumberFromCoords()</code> returns the
+                        corresponding complex number for a pixel in the canvas, assuming that the canvas represents the region \([-2,1]\times[-1,1]\) in the complex plane. The latter
+                        is already used in <code>mandelbrotSet()</code> to provide you with a usage example. Both constructors
+                        have to be called using <code>new</code>. Implement functions <code>f_c()</code> and <code>countIterationsNaive()</code>
+                        in section <i>Magic Math</i> and function <code>getColorForIter()</code> in section <i>Colors</i> and use them in <code>mandelbrotSet()</code> in section
+                        <i>Canvas Fillers</i> to reproduce the images in the testcases. You might wonder why there is a second <code>countIterations()</code> function: this is because
+                        you will see banding artifacts once we add color, which you will fix by changing the return value of <code>countIterationsNoBanding()</code>. This will be handled in the next task, 
+                        you don't need to worry about it for now.
+                    </p>
+                    <table class="centerContent boxes">
+                        <tr> 
+                            <th><b>Your code</b></th>
+                            <th><b>Solution</b></th>
+                            <th><b>Difference</b></th>
+                        </tr>
+                        <tr>
+                            <td><canvas id="canvas4a-1" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=30 data-call-p1="-0.5, 0" data-call-p2=0 data-call-p3=0></canvas></td>
+                            <td><canvas id="sol4a-1" src="images/sol4a-1.bin" width=198 height=132></canvas></td>
+                            <td><canvas id="diff4a-1" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4a-1" data-call-p1="sol4a-1" data-call-p2="1" data-call-p3="50"></canvas></td>
+                        </tr>
+                    </table>
+                    <details>
+                        <summary>Click here to show the other test cases!</summary>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: Close up. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4a-2" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=30 data-call-p1="-0.65, 0.5" data-call-p2=-3 data-call-p3=0></canvas></td>
+                                <td><canvas id="sol4a-2" src="images/sol4a-2.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4a-2" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4a-2" data-call-p1="sol4a-2" data-call-p2="1" data-call-p3="50"></canvas></td>
+                            </tr>
+                        </table>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: Less maximum iterations. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4a-3" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=10 data-call-p1="-0.5, 0" data-call-p2=0.5 data-call-p3=0></canvas></td>
+                                <td><canvas id="sol4a-3" src="images/sol4a-3.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4a-3" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4a-3" data-call-p1="sol4a-3" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                    </details>
+                  </subtask>
+
+                  <subtask title="Add Some Color" points=4 type="advanced">
+                    <p>
+                        Once you are able to correctly visualize the Mandelbrot set, it is time to render the exterior of the Mandelbrot set in a more informative (and also more beautiful)
+                        way. Instead of using only the binary information about convergence/divergence for each pixel, one can easily adapt the coloration to represent <i>how fast</i> the
+                        sequence is diverging for a given \(c\). In the Escape Time Algorithm, this is equivalent to shading the pixels according to the number of iterations needed to meet
+                        the divergence condition. To do so, change function <code>getColorForIter()</code> according to the comments to support all four color schemes selectable from
+                        the radio buttons (see pictures at the top of the advanced section or the testcases below for reference). The changes should only affect the exterior of the set; 
+                        make sure the interior is always shaded black. For the rainbow color scheme, use HSV colors and implement conversion to RGB colors in function <code>hsv2rgb()</code>.
+                    </p>
+                    <table style="margin-left:100px; margin-right:100px;" class="boxes">
+                        <tr>
+                            <td>
+                                <img src="images/withBands.png" />
+                                <center>Naive shading (banding effect)</center>
+                            </td>
+                            <td>
+                                <img src="images/withoutBands.png" />
+                                <center>Smooth shading</center>
+                            </td>
+                        </tr>
+                        <tr></tr>
+                    </table>
+                    <p>
+                        As you might have noticed, this kind of color picking results in ugly color bands. This effect gets even worse when you use the slider to reduce the number of
+                        iterations used for the Escape Time Algorithm (see picture above, left side). An easy way to mitigate this banding effect is to use a fractional rather than an
+                        integer iteration count. Take a look at <a href="http://linas.org/art-gallery/escape/smooth.html" target="_blank">this explanation</a> and change your code in function
+                        <code>countIterationsNoBanding()</code> accordingly. This function will be used instead of <code>countIterationsNaive()</code> from now on automatically, you don't need 
+                        to change anything besides the return value of <code>countIterationsNoBanding()</code>. Since all of the testcases below assume that color banding is fixed, we recommend 
+                        to first implement the most simlpe colorscheme where banding would be visible (greyscale) and use the first testcase to make sure your <code>countIterationsNoBanding()</code> 
+                        function works as intended before moving on to the the 'underwater' and 'rainbow' colorscheme.
+                    </p>
+                    <table class="centerContent boxes">
+                        <tr> 
+                            <th><b>Your code</b></th>
+                            <th><b>Solution</b></th>
+                            <th><b>Difference</b></th>
+                        </tr>
+                        <tr>
+                            <td><canvas id="canvas4b-1" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=20 data-call-p1="-0.5, 0" data-call-p2=0 data-call-p3=3></canvas></td>
+                            <td><canvas id="sol4b-1" src="images/sol4b-1.bin" width=198 height=132></canvas></td>
+                            <td><canvas id="diff4b-1" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4b-1" data-call-p1="sol4b-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                        </tr>
+                    </table>
+                    <details>
+                        <summary>Click here to show the other test cases!</summary>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: greyscale colors. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4b-2" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=20 data-call-p1="-0.5, 0" data-call-p2=0 data-call-p3=1></canvas></td>
+                                <td><canvas id="sol4b-2" src="images/sol4b-2.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4b-2" type="eval"width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4b-2" data-call-p1="sol4b-2" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: underwater colors. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4b-3" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=20 data-call-p1="-0.5, 0" data-call-p2=0 data-call-p3=2></canvas></td>
+                                <td><canvas id="sol4b-3" src="images/sol4b-3.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4b-3" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4b-3" data-call-p1="sol4b-3" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: rainbow colors, with less iterations to increase the color banding artifacts. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4b-4" width=198 height=132 data-call="setupMandelbrot" data-call-src="./Advanced/Advanced.js" data-call-p0=8 data-call-p1="-0.5, 0" data-call-p2=0 data-call-p3=3></canvas></td>
+                                <td><canvas id="sol4b-4" src="images/sol4b-4.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4b-4" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4b-4" data-call-p1="sol4b-4" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                    </details>
+                  </subtask>
+
+                  <subtask title="Investigate the Mandelbrot Set" points=2 type="advanced">
+                    <p>
+                        So far, it is only possible to look at the whole set in the domain \([-2,1]\times[-1,1]\). To further investigate the fractal outline of the Mandelbrot set, you have
+                        to define event listeners to enable zooming and moving the complex plane.
+                    </p>
+                    <p>
+                        Three event listeners are involved in the moving process: <code>onMouseDown()</code>, <code>onMouseMove()</code> and <code>onMouseUp()</code> in section
+                        <i>Event Listeners</i>. Use the three handlers to enable choosing a point and dragging it somewhere else. To enable zooming by turning the mouse wheel, you
+                        only have to add the event listener <code>onMouseWheel()</code>, which is already given and zooms relatively to the center of the canvas.
+                    </p>
+                    <table class="centerContent boxes">
+                        <tr> 
+                            <th><b>Your code</b></th>
+                            <th><b>Solution</b></th>
+                            <th><b>Difference</b></th>
+                        </tr>
+                        <tr>
+                            <td><canvas id="canvas4c-1" width=198 height=132 data-call="testCallbackImplementation" data-call-src="./resources/js/advanced_wrapper.js" data-call-p0=30 data-call-p1="-0.5, 0" data-call-p2=0 data-call-p3=1 data-call-p4=vec(0,0) data-call-p5=vec(50,50) data-call-p6=false data-call-p7=false></canvas></td>
+                            <td><canvas id="sol4c-1" src="images/sol4c-1.bin" width=198 height=132></canvas></td>
+                            <td><canvas id="diff4c-1" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4c-1" data-call-p1="sol4c-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                        </tr>
+                    </table>
+                    <details>
+                        <summary>Click here to show the other test cases!</summary>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: Check if lastPoint is properly updated. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4c-2" width=198 height=132 data-call="testCallbackImplementation" data-call-src="./resources/js/advanced_wrapper.js" data-call-p0=30 data-call-p1="-0.65, 0.5" data-call-p2=-3 data-call-p3=2 data-call-p4=vec(100,0) data-call-p5=vec(50,50) data-call-p6=true data-call-p7=false></canvas></td>
+                                <td><canvas id="sol4c-2" src="images/sol4c-2.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4c-2" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4c-2" data-call-p1="sol4c-2" data-call-p2="0.5" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                        <table class="centerContent boxes">
+                            <caption> Testcase: Additionally check if movement is correctly stopped after <code>onMouseUp()</code>.</caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4c-3" width=198 height=132 data-call="testCallbackImplementation" data-call-src="./resources/js/advanced_wrapper.js" data-call-p0=30 data-call-p1="-0.5, 0" data-call-p2=-1 data-call-p3=3 data-call-p4=vec(0,0) data-call-p5=vec(75,0) data-call-p6=true data-call-p7=true></canvas></td>
+                                <td><canvas id="sol4c-3" src="images/sol4c-3.bin" width=198 height=132></canvas></td>
+                                <td><canvas id="diff4c-3" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4c-3" data-call-p1="sol4c-3" data-call-p2="0.5" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                    </details>
+                  </subtask>
+
+                  <subtask title="Add Julia Sets" points=1 type="advanced">
+                    <p>
+                        Now that you can compute the Mandelbrot set in all its glory, it is time to work on renderings of Julia sets. Unlike
+                        in the case of the Mandelbrot set, there is not only one Julia set: You can find one for each complex function! In this assignment, you will restrict yourselves to Julia sets
+                        emerging from the same function as the Mandelbrot set. This time, the set is formed by all complex numbers \(z\) for which the sequence \((z_n), n \in \mathbb{N}\)
+                        converges for a fixed \(c\). To sum up, the choices of \(z\) and \(c\) are:
+                        <ul>
+                            <li>
+                                Mandelbrot set: \(z = 0\) fixed, \(c\) chosen as pixel on screen
+                            </li>
+                            <li>
+                                Julia set: \(c\) fixed, \(z\) chosen as pixel on screen
+                            </li>
+                        </ul>
+                    </p>
+                    <p>
+                        <img src="images/Julia.png" width="198px" class="floatRight"/>
+                        Using this knowledge, change function <code>juliaSet()</code> in the <i>Canvas Fillers</i> section to display the Julia set for the \(c\) stored in the variable
+                        <code>juliaC</code>. The functions needed to perform the rendering have already been implemented in the last assignments. The result should look like the picture on
+                        the right (for 30 iterations and the rainbow color scheme).
+                    </p>
+                    <p>
+                        Once this works, you can choose a new \(c\) by holding the CTRL key pressed and clicking on the Mandelbrot canvas. This way, you can explore the
+                        relationship between the Mandelbrot set and this kind of Julia sets. Note that only the canvases at the top of the advanced section are interactive.
+                    </p>
+                    <p>
+                        When you have found interesting \(c\)s, you can also define a line by holding the shift key pressed and clicking on two points on the Mandelbrot canvas. 
+                        The variable <code>juliaC</code> will then be moved back and forth along the line (depicted in white) across the complex plane.
+                        This way, you can create a mesmerizing Julia set animation for every line you define!
+                    </p>
+                    <table class="centerContent boxes">
+                        <tr> 
+                            <th><b>Your code</b></th>
+                            <th><b>Solution</b></th>
+                            <th><b>Difference</b></th>
+                        </tr>
+                        <tr>
+                            <td><canvas id="canvas4d-1" width=200 height=200 data-call="setupJulia" data-call-src="./Advanced/Advanced.js" data-call-p0=30 data-call-p1="0.4, 0.1" data-call-p2=3></canvas></td>
+                            <td><canvas id="sol4d-1" src="images/sol4d-1.bin" width=200 height=200></canvas></td>
+                            <td><canvas id="diff4d-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4d-1" data-call-p1="sol4d-1" data-call-p2="0.5" data-call-p3="50"></canvas></td>
+                        </tr>
+                    </table>
+                    <details>
+                        <summary>Click here to show the other test cases!</summary>
+
+                        <table class="centerContent boxes">
+                        <caption> Testcase: More iterations, greyscale colors and different juliaC. </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas4d-2" width=200 height=200 data-call="setupJulia" data-call-src="./Advanced/Advanced.js" data-call-p0=40 data-call-p1="0.29, 0" data-call-p2=1></canvas></td>
+                                <td><canvas id="sol4d-2" src="images/sol4d-2.bin" width=200 height=200></canvas></td>
+                                <td><canvas id="diff4d-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas4d-2" data-call-p1="sol4d-2" data-call-p2="0.5" data-call-p3="50"></canvas></td>
+                            </tr>
+                        </table>
+                    </details>
+                  </subtask>
+                </task>
+              </exercise>
+            </content>
+    </page>
+</body>
+</html>
