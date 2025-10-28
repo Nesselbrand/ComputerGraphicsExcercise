@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/css/print.css">
+    <!-- explicitly set absent favicon to avoid error message with live server -->
+    <link rel="icon" href="data:,">
+
+    <meta name="lecture" content="Computer Graphics">
+    <meta name="exerciseNr" content="2">
+    <meta name="exercisePrefix" content="Exercise">
+    <meta name="term" content="Winter Term 2025/26">
+    <meta name="dueDate" content="November 03, 2025, 23:55">
+
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript" src="./resources/js/num.js"></script>
+    <script type="text/javascript" src="./resources/js/FileSaver.js"></script>
+    <script type="text/javascript" src="./resources/js/jszip.js"></script>
+    <script type="text/javascript" src="./resources/js/dispatcher.js"></script>
+    <script type="text/javascript" src="./resources/js/sheet.js"></script>
+    <script type="text/javascript" src="Basic/Helper.js"></script>
+</head>
+
+
+<body>
+    <!-- global lists to help when saving the solution images TODO check if this can be removed by using the gernetSkeleton script? -->
+    <script>
+        // specify submission canvas ids that need to be saved to binaries (this will be done everytime the page is refreshed!)
+        window.saveIDsToBinaryList = ["canvas1a-1", "canvas1a-2", "canvas1a-3", "canvas1a-4", "canvas1a-5", "canvas1a-6", "canvas1a-7", "canvas1a-8", "canvas2a-1", "canvas2a-2", "canvas3a-1", "canvas3a-2", "canvas3a-3", "canvas3a-4"];
+    </script>
+    <script>
+        // specify submission (gl) canvas ids that need to be saved to images (right click is not possible unfortunatly)
+        window.saveGLIDsToImageList = [];
+    </script>
+    
+    <!-- initialize session storage, if not yet populated -->
+    <script>
+        if (!sessionStorage.getItem("settings-linear-scale")) { sessionStorage.setItem("settings-linear-scale", 1.0); }
+    </script>
+
+    <page size="A4">
+        <content>
+            <exercise prefix="Basic Exercises" title="Rasterization" points=10>
+
+                <table class="pointsTable floatLeft" type="basic"></table>
+
+                <form class="correctionColor">
+                    <fieldset class="correctionColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="basic" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="basic">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale"> Linear difference scale: <span id="settings-linear-scale-print"></span></label><br>
+                            <input type="range" id="settings-linear-scale" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="zipButtonBasic" type="basic" onclick="zipAndDownload('Basic')"> zip basic submission </button>
+
+                <p>
+                    <br>
+                    As a reminder: 
+                    To be able to correctly run the exercises, you may have to change some settings in the Firefox configurations.
+                    If you encounter an error saying "DOMException" on the console and nothing is loaded, you have to set <b>security.fileuri.strict_origin_policy</b> to false in the Firefox config.
+                    Access the Firefox config by typing <b>about:config</b> into the Firefox bar in a new tab, hit enter and skip the warning.
+                    It might be required to refresh the index.html page several times after that to apply the changes and make everything work!
+                    You should revert this setting after you're done with the exercises.
+                </p>
+
+                <task title="Line Rasterization" points=8 submitfile="Basic1.js">
+
+                    <div class="floatLeft">
+                        <p>
+                            <center>
+                                <input type="range" min="1" max="10" step="1" value="10" onchange="onChangePixelScale(this.value)" />
+                            </center>
+                        </p>
+                        <p>
+                            <center>
+                                <canvas id="bresenham_canvas" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(10,10) data-call-p1=vec(180,180) data-call-p2=10><img class="wait"></canvas>
+                            </center>
+                        </p>
+                    </div>
+
+
+                    <p>
+                        From the first exercise you already know the HTML element of type <code>canvas</code>.
+                        The canvas on the left contains a red and a green pixel which you should connect with a line during this task.
+                        You find the source code of this assignment in the JavaScript file <code>Basic1.js</code>.
+                        Your task is to draw a line from the red to the green point using the Bresenham Algorithm by setting the pixels of said canvas in the function <code>bresenham()</code>.
+                    </p>
+                    <p>
+                        Use the helper function <code>setPixelS()</code> provided in <code>Helper.js</code> to set a pixel if needed.
+                        Note that this helper function does not only set one pixel but a square of pixels depending on the variable <code>pixelScale</code>.
+                        The usage of the function is shown in <code>RenderCanvas1()</code> where start and end point of the line are drawn.
+                        You can adjust the size of the pixel square using the slider above.
+                        During the editing of function <code>bresenham()</code>, you can use large pixels to better evaluate mistakes and their effects.
+                        Once you are finished, you can examine your results for smaller pixels.
+                        The connection between the points should look like a straight line then.
+                    </p>
+                    <p>
+                        Using the left mouse button you can change the start point of the line.
+                        If you hold CTRL you can change the end point.
+                        Make sure that your algorithm works for all constellations of start and end point.
+                        When thinking about octants, keep in mind that for a HTML canvas, the y axis always goes from top to bottom!
+                        There is one test case for each octant.
+                    </p>
+                    <p>
+                        <b>Hint:</b> The comments in the code only give you the roadmap for one octant 
+                        (start point x value &lt; end point x value, start point y value &lt; end point y value, 
+                        difference in y values &lt; difference in x values). 
+                        Try to solve this case first by following the hints in the TODOs.
+                        Afterwards, extend your code to make all other octants work as well. 
+                        In order to do so, you can change the given structure of the code!
+                    </p>
+
+                    <subtask title="Bresenham Line Rasterization" points=8 type="basic">
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1a-1" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(120,20) data-call-p1=vec(80,180) data-call-p2=7></canvas></td>
+                                <td><canvas id="sol1a-1" src="images/sol1a-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff1a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-1" data-call-p1="sol1a-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-2" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(180,80) data-call-p1=vec(20,120) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-2" src="images/sol1a-2.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-2" data-call-p1="sol1a-2" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-3" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(180,120) data-call-p1=vec(20,80) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-3" src="images/sol1a-3.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-3" data-call-p1="sol1a-3" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-4" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(120,180) data-call-p1=vec(80,20) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-4" src="images/sol1a-4.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-4" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-4" data-call-p1="sol1a-4" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-5" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(80,180) data-call-p1=vec(120,20) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-5" src="images/sol1a-5.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-5" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-5" data-call-p1="sol1a-5" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-6" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(20,120) data-call-p1=vec(180,80) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-6" src="images/sol1a-6.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-6" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-6" data-call-p1="sol1a-6" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-7" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(20,80) data-call-p1=vec(180,120) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-7" src="images/sol1a-7.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-7" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-7" data-call-p1="sol1a-7" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-8" width=200 height=200 data-call="setupBresenham" data-call-src="./Basic/Basic1.js" data-call-p0=vec(80,20) data-call-p1=vec(120,180) data-call-p2=7></canvas></td>
+                                    <td><canvas id="sol1a-8" src="images/sol1a-8.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-8" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-8" data-call-p1="sol1a-8" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+
+                <!-- ------------------------------------------------------------------------------------------------------------- -->
+                <task title="Flood Fill" points=2 submitfile="Basic2.js">
+
+                        <canvas id="floodfill_canvas" width=200 height=200 class="floatRight" data-call="setupFloodFill" data-call-src="./Basic/Basic2.js" data-call-p0=vec(50,50)></canvas>
+                        <p>
+                            In this task we want you to implement Flood Fill.
+                            Flood Fill is a simple algorithm to fill a 2D object that is defined by a 2D boundary.
+                            You find the source code of this assignment in the JavaScript file <code>Basic2.js</code>.
+                            Your task is to implement the algorithm in <code>floodFill4()</code> such that it considers the four direct neighbours of a pixel.
+                        </p>
+                        <p>
+                            The algorithm gets a seed point and a color as input.
+                            Starting from this pixel position the color of the current pixel is set and the <code>floodFill4()</code> function is recursively called for the surrounding pixels.
+                            The recursion should stop if the pixel already has the target color.
+                            Note that the boundary has the same color as the target fill color.
+                            Use the helper functions <code>setPixel()</code> and <code>getPixel()</code> defined in <code>Helper.js</code> to access a pixel if needed. 
+                            Use the return value of <code>getPixel()</code> to handle the canvas border.
+                        </p>
+                        <p> 
+                            Using the left mouse button you can change the seed point to fill one of the rectangles defined in the canvas on the right.
+                            The fill color is defined as red.
+                        </p>
+
+                    <subtask title="Recursive Flood Fill" points=2 type="basic">
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2a-1" width=200 height=200 data-call="setupFloodFill" data-call-src="./Basic/Basic2.js" data-call-p0=vec(50,50)></canvas></td>
+                                <td><canvas id="sol2a-1" src="images/sol2a-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff2a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-1" data-call-p1="sol2a-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+
+                            <table class="centerContent boxes">
+                                <caption>Testcase: different seed point</caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2a-2" width=200 height=200 data-call="setupFloodFill" data-call-src="./Basic/Basic2.js" data-call-p0=vec(140,180)></canvas></td>
+                                    <td><canvas id="sol2a-2" src="images/sol2a-2.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff2a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-2" data-call-p1="sol2a-2" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+
+            </exercise>
+        </content>
+    </page>
+
+    <page size="A4">
+        <content>
+            <exercise prefix="Advanced Exercises" title="Rasterization" points=10>
+
+                <table class="pointsTable floatLeft" type="advanced"></table>
+
+                <form class="correctionColor">
+                    <fieldset class="correctionColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="advanced" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="advanced">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale-adv"> Linear difference scale: <span id="settings-linear-scale-print-adv"></span></label><br>
+                            <input type="range" id="settings-linear-scale-adv" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale-adv").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print-adv").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-adv").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print-adv").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="zipButtonAdvanced" type="advanced" onclick="zipAndDownload('Advanced')"> zip advanced submission </button>
+
+                <!-- ------------------------------------------------------------------------------------------------------------- -->
+                <task title="Scanline Algorithm" points=10 submitfile="Advanced.js">
+                    <p>
+                        In this task you are asked to implement the Scanline Algorithm used to rasterize a solid polygon.
+                        You find the source code of this assignment in the JavaScript file <code>Advanced.js</code>.
+                        Have a look at the already existing functions to create an edge table (<code>EdgeTable()</code>) and an active edge table (<code>ActiveEdgeTable()</code>).
+                        Note that the entries of the edge table are sorted by <code>y_lower</code>.
+                        Use these functions to initialize the Scanline Algorithm and implement the function <code>scanline()</code>.
+                    </p>
+                    <p>
+                        The Scanline Algorithm starts at <code>y = 0</code> and iterates while <code>y &lt; image.height</code>.
+                        In every iteration the active edge table is updated.
+
+                        To add a new entry in an active edge table use <code>activeEdgeTable.entries.push( new ActiveEdgeTableEntry(...));</code> and <code>activeEdgeTable.nEntries++;</code>.
+                        Since there is no straightforward way to remove entries from an array in Javascript, you can simply build a new active edge table and copy the relevant items.
+                        After updating the active edge table, you have to sort the table according to the <code>x_intersect</code> value.
+                        The sorted active edge table allows you to easily set the pixels in the current pixel row.
+                        Use <code>setPixel()</code> to set the affected pixels to the color of the polygons (<code>polygon.color</code>).
+                        There is a different polygon for each testcase.
+                    </p>
+
+                    <subtask title="Draw Primitives with the Scanline Algorithm" points=10 type="advanced">
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas3a-1" width=200 height=200 data-call="setupScanline" data-call-src="./Advanced/Advanced.js" data-call-p0=0></canvas></td>
+                                <td><canvas id="sol3a-1" src="images/sol3a-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="canvas2-3-diff" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-1" data-call-p1="sol3a-1" data-call-p2="3" data-call-p3="300"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas3a-2" width=200 height=200 data-call="setupScanline" data-call-src="./Advanced/Advanced.js" data-call-p0=1></canvas></td>
+                                    <td><canvas id="sol3a-2" src="images/sol3a-2.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="canvas2-3-diff1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-2" data-call-p1="sol3a-2" data-call-p2="3" data-call-p3="500"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas3a-3" width=200 height=200 data-call="setupScanline" data-call-src="./Advanced/Advanced.js" data-call-p0=2></canvas></td>
+                                    <td><canvas id="sol3a-3" src="images/sol3a-3.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="canvas2-3-diff2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-3" data-call-p1="sol3a-3" data-call-p2="3" data-call-p3="300"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <p>
+                                If your Scanline implementation does not yield a correct image of the star in this testcase, make sure that you have taken special cases into account and that your algorithm can handle more than two intersections.
+                            </p>
+                            <p>
+                                Hints: 
+                                <ul>
+                                    <li>Think about what has to be done to horizontal lines like the two which can be found in the outline of the star.</li>
+                                    <li>Be careful with end and start y values and do not hardcode horizontal lines! </li>
+                                </ul>
+                            </p>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas3a-4" width=200 height=200 data-call="setupScanline" data-call-src="./Advanced/Advanced.js" data-call-p0=3></canvas></td>
+                                    <td><canvas id="sol3a-4" src="images/sol3a-4.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="canvas2-3-diff3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-4" data-call-p1="sol3a-4" data-call-p2="1" data-call-p3="50"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+            </exercise>
+        </content>
+    </page>
+</body>
