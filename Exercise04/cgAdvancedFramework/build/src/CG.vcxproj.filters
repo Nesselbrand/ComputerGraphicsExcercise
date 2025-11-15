@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui_impl_sdl_gl3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui_orient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\obj_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\shaderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui_impl_sdl_gl3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\imgui_orient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\stb_rect_pack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\stb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\imgui\stb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\shaderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\framework\window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{CB6D2532-FE54-3EE7-83E1-F2D12B6F10AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{47786362-DCB5-3E0F-8366-165FDE713832}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

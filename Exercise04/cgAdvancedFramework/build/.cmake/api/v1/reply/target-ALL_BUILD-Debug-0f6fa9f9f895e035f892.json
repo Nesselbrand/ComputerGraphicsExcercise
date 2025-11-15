@@ -1,0 +1,47 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"submodules/glew-cmake/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "libglew_static::@0b6d7304ab34e9b855f1"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "ALL_BUILD::@0b6d7304ab34e9b855f1",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"orderDependencies" : 
+	[
+		{
+			"id" : "libglew_static::@0b6d7304ab34e9b855f1"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "submodules/glew-cmake",
+		"source" : "submodules/glew-cmake"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

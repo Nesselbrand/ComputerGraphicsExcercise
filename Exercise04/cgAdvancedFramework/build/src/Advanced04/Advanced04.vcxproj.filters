@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\Advanced04\src\cg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\Advanced04\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\Advanced04\src\cg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\Advanced04\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{CB6D2532-FE54-3EE7-83E1-F2D12B6F10AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{47786362-DCB5-3E0F-8366-165FDE713832}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

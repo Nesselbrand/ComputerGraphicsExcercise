@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\submodules\glew-cmake\src\glew.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\submodules\glew-cmake\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\submodules\glew-cmake\build\glew.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{47786362-DCB5-3E0F-8366-165FDE713832}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

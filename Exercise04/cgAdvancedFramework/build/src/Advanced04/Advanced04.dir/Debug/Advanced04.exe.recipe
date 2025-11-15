@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\build\Debug\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\build\submodules\SDL\Debug\sdl_headers_copy</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\Nesselbrand\Desktop\ComputerGraphics\Exercise04\cgAdvancedFramework\src\Advanced04\Debug\Advanced04.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

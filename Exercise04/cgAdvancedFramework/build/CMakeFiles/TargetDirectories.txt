@@ -1,0 +1,16 @@
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/CMakeFiles/INSTALL.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/glew-cmake/CMakeFiles/libglew_static.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/glew-cmake/CMakeFiles/INSTALL.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/glew-cmake/CMakeFiles/ALL_BUILD.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/CMakeFiles/sdl_headers_copy.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/CMakeFiles/SDL2main.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/CMakeFiles/SDL2-static.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/CMakeFiles/uninstall.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/CMakeFiles/INSTALL.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/CMakeFiles/ALL_BUILD.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/src/CMakeFiles/CG.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/src/CMakeFiles/INSTALL.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/src/Advanced04/CMakeFiles/Advanced04.dir
+C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/src/Advanced04/CMakeFiles/INSTALL.dir

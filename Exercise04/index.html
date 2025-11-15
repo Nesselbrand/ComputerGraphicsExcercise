@@ -1,0 +1,534 @@
+﻿
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/css/print.css">
+    <!-- explicitly set absent favicon to avoid error message with live server -->
+    <link rel="icon" href="data:,">
+
+    <meta name="lecture" content="Computer Graphics">
+    <meta name="exerciseNr" content="4">
+    <meta name="exercisePrefix" content="Exercise">
+    <meta name="term" content="Winter Term 2025/26">
+    <meta name="dueDate" content="November 17, 2025, 23:55">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript" src="./resources/js/num.js"></script>
+    <script type="text/javascript" src="./resources/js/FileSaver.js"></script>
+    <script type="text/javascript" src="./resources/js/jszip.js"></script>
+    <script type="text/javascript" src="./resources/js/dispatcher.js"></script>
+    <script type="text/javascript" src="./resources/js/sheet.js"></script>
+
+    <style>
+        #div0, #div1, #div2, #div3 {
+            float: left;
+            width: 150px;
+            height: 100px;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- global lists to help when saving the solution images TODO check if this can be removed by using the gernetSkeleton script? -->
+    <script>
+        // specify submission canvas ids that need to be saved to binaries (this will be done everytime the page is refreshed!)
+        window.saveIDsToBinaryList = ["canvas1a-1", "canvas1b-1", "canvas1b-2", "canvas1c-1", "canvas1c-2", "canvas1c-3"];
+    </script>
+    <script>
+        // specify submission (gl) canvas ids that need to be saved to images (right click is not possible unfortunatly)
+        window.saveGLIDsToImageList = ["canvas2a-1"];
+    </script>
+    
+    <!-- initialize session storage, if not yet populated -->
+    <script>
+        if (!sessionStorage.getItem("settings-linear-scale")) { sessionStorage.setItem("settings-linear-scale", 1.0); }
+    </script>
+
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Basic Exercises" title="Projections & Blending" points=10>
+
+                <table class="pointsTable floatLeft" type="basic"></table>
+
+                <form class="differenceColor">
+                    <fieldset class="differenceColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="basic" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="basic">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale"> Linear difference scale: <span id="settings-linear-scale-print"></span></label><br>
+                            <input type="range" id="settings-linear-scale" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+
+                <button class="zipButton" type="basic" onclick="zipAndDownload('Basic')"> zip basic submission </button>
+
+                <task title="Projections in 2D" points=6 submitfile="Basic1.js">
+
+                    <subtask title="Orthogonal Projection" points="1" type="basic">
+                        <p>
+                            In this subtask you are asked to implement an orthogonal projection in 2D.
+                            Assume that the camera is aligned with the global coordinate system.
+                            The projection maps the 2D geometry onto a 1D line (the "image plane").
+                            You have to implement <code>Basic1_1.OrthogonalProjection2D(point2D)</code>.
+                            As an argument, it gets a 2D point that has to be projected onto the image plane. The function returns the 1D coordinate on the image plane.
+                        </p>
+                        <canvas class="floatLeft" id="canvasBasic_1_1" width=600 height=300 data-call="Basic1_1" data-call-src="./Basic/Basic1.js">
+                            <img class="wait">
+                        </canvas>
+
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1a-1" width=200 height=200 data-call="Basic1_1" data-call-src="./Basic/Basic1.js"></canvas></td>
+                                <td><canvas id="sol1a-1" src="images/sol1a-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-1" data-call-p1="sol1a-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+                    </subtask>
+
+                    <subtask title="Perspective Projection" points="2" type="basic">
+                        <p>
+                            In this subtask you are asked to implement a perspective projection in 2D.
+                            Assume that the camera is aligned with the global coordinate system.
+                            The projection maps the 2D geometry onto a 1D line (the image plane).
+                            You have to implement <code>Basic1_2.PerspectiveProjection2D(eye, imagePlane, point2D)</code>.
+                            In contrast to the previous assignment it also gets the position of the eye and the z component of the image plane.
+                            Before projecting the point, you have to transform the point into camera space (origin is the eye position, axes are aligned to the world coordinate system).
+                            The function returns the 1D coordinate on the image plane.
+                        </p>
+                        <canvas class="floatLeft" id="canvasBasic_1_2" width=600 height=300 data-call="Basic1_2" data-call-src="./Basic/Basic1.js" data-call-p0="vec(150,10)" data-call-p1=150>
+                            <img class="wait">
+                        </canvas>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1b-1" width=200 height=200 data-call="Basic1_2" data-call-src="./Basic/Basic1.js" data-call-p0="vec(100,5)" data-call-p1=50></canvas></td>
+                                <td><canvas id="sol1b-1" src="images/sol1b-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-1" data-call-p1="sol1b-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+
+                            <table class="centerContent boxes">
+                                <caption> Testcase: different eye position and image plane distance </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1b-2" width=200 height=200 data-call="Basic1_2" data-call-src="./Basic/Basic1.js" data-call-p0="vec(25,25)" data-call-p1=75></canvas></td>
+                                    <td><canvas id="sol1b-2" src="images/sol1b-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1b-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-2" data-call-p1="sol1b-2" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+
+                    <subtask title="Perspective Projection in Homogeneous Coordinates" points="3" type="basic">
+                        <p>
+                            From the previous assignment you know how a perspective projection works.
+                            As you know from the lecture, a perspective projection can be easily applied using homogeneous coordinates.
+                        </p>
+                        <p>
+                            In this subtask we have a freely movable camera.
+                            You can use the left mouse button to set a new camera center (eye).
+                            Using CTRL + mouse button you can change the point the camera looks at.
+                            Your task is to implement the required methods to set up the camera matrix, the inverse camera matrix and the perspective transformation matrix
+                            (have a look at the <code>TODO</code>s in <code>Camera.update</code> and <code>mat3.perspective</code>).
+                            The camera matrix transforms a point from world space to camera space.
+                            The inverse camera matrix transforms a point from camera space to world space.
+                            Finally, you have to project a point given in world space coordinates to the canonical volume.
+                            Therefore, you have to implement the function <code>Camera.projectPoint</code>.
+                        </p>
+                        <canvas class="floatLeft" id="canvasBasic_1_3" width=600 height=300 data-call="Basic1_3" data-call-src="./Basic/Basic1.js" data-call-p0="vec(150,10)" data-call-p1=30 data-call-p2=150 data-call-p3=500 data-call-p4="vec(150,450)" data-call-p5="false">
+                            <img class="wait">
+                        </canvas>
+
+                        <table class="centerContent boxes">
+                            <caption>Testcase: Canonical Volume of the setup above, if everything has been done correctly</caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1c-1" width=200 height=200 data-call="Basic1_3" data-call-src="./Basic/Basic1.js" data-call-p0="vec(150,10)" data-call-p1=30 data-call-p2=150 data-call-p3=500 data-call-p4="vec(150,450)" data-call-p5="true"></canvas></td>
+                                <td><canvas id="sol1c-1" src="images/sol1c-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1c-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-1" data-call-p1="sol1c-1" data-call-p2="1" data-call-p3="100"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1c-2" width=200 height=200 data-call="Basic1_3" data-call-src="./Basic/Basic1.js" data-call-p0="vec(100,5)" data-call-p1=60 data-call-p2=33 data-call-p3=166 data-call-p4="vec(100,150)" data-call-p5="false"></canvas></td>
+                                    <td><canvas id="sol1c-2" src="images/sol1c-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1c-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-2" data-call-p1="sol1c-2" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <caption> Testcase: different eye position and lookAtPoint </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1c-3" width=200 height=200 data-call="Basic1_3" data-call-src="./Basic/Basic1.js" data-call-p0="vec(160,35)" data-call-p1=60 data-call-p2=33 data-call-p3=166 data-call-p4="vec(25,150)" data-call-p5="false"></canvas></td>
+                                    <td><canvas id="sol1c-3" src="images/sol1c-3.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1c-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-3" data-call-p1="sol1c-3" data-call-p2="1" data-call-p3="100"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+
+                </task>
+
+                <task title="Projections in 3D" points=2 submitfile="Basic2.js">
+                    <p>
+                        In this task, you are asked to implement the 2D projection concept from the last task in 3D and set up a camera which projects the 3D space
+                        into 2D. The canvas below is split: On the left side, you can see the projection result, i.e. the image seen from the camera. On the right
+                        side, there is a debug view showing you both the observed scene (a colored cube in the middle of the coordinate system) and the frustum
+                        belonging to the camera.
+                    </p>
+                    <p>
+                        <center>
+                            <canvas id="canvasProjection3D" width=600 height=300 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0=vec(6,6,6)>
+                                <img class="wait">
+                                <shader id="shader-vs-cube" type="--vertex" src="./Basic/shader_cube.vs"></shader>
+                                <shader id="shader-fs-cube" type="--fragment" src="./Basic/shader_cube.fs"></shader>
+                                <shader id="shader-vs-line" type="--vertex" src="./Basic/shader_line.vs"></shader>
+                                <shader id="shader-fs-line" type="--fragment" src="./Basic/shader_line.fs"></shader>
+                            </canvas>
+                        </center>
+                    </p>
+                    <p>
+                        <center>
+                            Field of View: <input type="range" id="slider_fovy" min="10" max="50" step="1" value="30" />
+                        </center>
+                    </p>
+                    <p>
+                        The functions to be implemented are <code>Camera3D.update</code> and <code>mat4.perspective</code>, analogously to the two functions in
+                        4.1c). Find the appropriate <code>TODO</code>s in the code and add code for the creation of the two matrices needed: First, set up the camera matrix in
+                        <code>Camera3D.update</code>. Once you have completed this, you should see the camera frustum in the debug view on the right side.
+                        The debug frustum is colored similarly to the cube in order to allow for better three-dimensional interpretation.
+                        Second, set up the projection matrix in <code>mat4.perspective</code>. Once this matrix is correct, you should see the camera output in the view on the left side.
+                        Note: You can assume the canvas to be square, i.e. an aspect ratio of 1.
+                    </p>
+
+                    <p>
+                        As soon as you have finished the creation of the two matrices, you can test the implementation through interaction.
+                        You can move the camera within bounds, using the keys W (move camera forwards), S (move camera backwards), A (turn camera to the left) and D (turn camera to
+                        the right). The camera is always oriented towards the origin and therefore towards the cube. The opening angle of the camera can be adjusted using the slider below the canvas.
+                        The debug camera remains static during all of these changes so you can observe the effects on the camera frustum.
+                    </p>
+
+
+                    <subtask title="Projection" points=2 type="basic">
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2a-1" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0=vec(6,6,6)>
+                                    <shader id="shader-vs-cube" type="--vertex" src="./Basic/shader_cube.vs"></shader>
+                                    <shader id="shader-fs-cube" type="--fragment" src="./Basic/shader_cube.fs"></shader>
+                                    <shader id="shader-vs-line" type="--vertex" src="./Basic/shader_line.vs"></shader>
+                                    <shader id="shader-fs-line" type="--fragment" src="./Basic/shader_line.fs"></shader>
+                                    </canvas></td>
+                                <td><canvas id="sol2a-1" src="images/sol2a-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff2a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-1" data-call-p1="sol2a-1" data-call-p2="1" data-call-p3="200" data-call-p4="true"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+
+                            <table class="centerContent boxes">
+                                <caption>Testcase: eye position mirrored by the position of the cube </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2a-2" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0=vec(-6,-6,-6)>
+                                        <shader id="shader-vs-cube" type="--vertex" src="./Basic/shader_cube.vs"></shader>
+                                        <shader id="shader-fs-cube" type="--fragment" src="./Basic/shader_cube.fs"></shader>
+                                        <shader id="shader-vs-line" type="--vertex" src="./Basic/shader_line.vs"></shader>
+                                        <shader id="shader-fs-line" type="--fragment" src="./Basic/shader_line.fs"></shader>
+                                        </canvas></td>
+                                    <td><canvas id="sol2a-2" src="images/sol2a-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff2a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-2" data-call-p1="sol2a-2" data-call-p2="1" data-call-p3="200" data-call-p4="true"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+
+                <task title="Alpha Blending" points=2 submitfile="Basic3.js">
+
+                    <p>
+                        In this task, you should implement correct alpha blending of the four colored circles you see below. The composed image should have a
+                        background of pure white, and the circles should be blended onto it from left to right (initial order: blue - red - yellow - green).
+                        You can alter the order of the circles and therefore of the blending process using drag-and-drop. The alpha values
+                        (ranging from $0$ to $1$, preset to $0.5$) can be modified using the sliders below the circle images.
+                    </p>
+                    <p>
+                        Follow the instructions in the <code>TODO</code>s to implement the function <code>doAlphaBlending()</code> and fill the canvas below
+                        the images with a blended version of the four circles.  Note that, for every image, only the circle
+                        and not its background should be blended, which is why it is transparent.
+                        Transparency of background pixels is annotated with a zero alpha channel value which you will have to use in your implementation.
+                    </p>
+
+                    <div id="div0" name="srcImage">  
+                        <img id="blue-circle" src="./images/blue.png" width=150 height=100 draggable="true" id="drag0">
+                    </div>
+
+                    <div id="div1" name="srcImage">
+                        <img id="red-circle" src="./images/red.png" width=150 height=100 draggable="true" id="drag1">
+                    </div>
+
+                    <div id="div2" name="srcImage" >
+                        <img id="yellow-circle"src="./images/yellow.png" width=150 height=100 draggable="true" id="drag2">
+                    </div>
+
+                    <div id="div3" name="srcImage" >
+                        <img id="green-circle" src="./images/green.png" width=150 height=100 draggable="true" id="drag3">
+                    </div>
+                    <table>
+                        <tr>
+                            <td> $\alpha$: <input type="range" id="alpha0" name="alpha" value="0.5" min="0" max="1" step="0.1" style="width: 100px;" /></td>
+                            <td> $\alpha$: <input type="range" id="alpha1" name="alpha" value="0.5" min="0" max="1" step="0.1" style="width: 100px;" /> </td>
+                            <td> $\alpha$: <input type="range" id="alpha2" name="alpha" value="0.5" min="0" max="1" step="0.1" style="width: 100px;" /> </td>
+                            <td> $\alpha$: <input type="range" id="alpha3" name="alpha" value="0.5" min="0" max="1" step="0.1" style="width: 100px;" /> </td>
+                        </tr>
+                    </table>
+                    <p>
+                        <center>
+                            <canvas id="canvasBasic3" width=300 height=200 data-call="Basic3" data-call-src="./Basic/Basic3.js" data-call-p0=0>
+                                <img class="wait">
+                            </canvas>
+                        </center>
+                    </p>
+                    <p>
+                        Once you are done, you can play around with the alpha values and the blending order to observe different effects. Note that you can
+                        also completely hide a circle by setting its alpha value to $0$.
+                    </p>
+
+                    <subtask title="Blending" points=2 type="basic">
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas3a-1" width=198 height=132 data-call="Basic3" data-call-src="./Basic/Basic3.js" data-call-p0=1></canvas></td>
+                                <td><canvas id="sol3a-1" src="images/sol3a-1.bin" width="198" height="132"/></td>
+                                <td><canvas id="diff3a-1" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-1" data-call-p1="sol3a-1" data-call-p2="1" data-call-p3="200"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <caption>The order and (alpha values) of this testcase are: green(1) - blue(0.6) - yellow(0.7) - red(0.8)</caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas3a-2" width=198 height=132 data-call="Basic3" data-call-src="./Basic/Basic3.js" data-call-p0=2></canvas></td>
+                                    <td><canvas id="sol3a-2" src="images/sol3a-2.bin" width="198" height="132"/></td>
+                                    <td><canvas id="diff3a-2" type="eval" width=198 height=132 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-2" data-call-p1="sol3a-2" data-call-p2="1" data-call-p3="200"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+            </exercise>
+        </content>
+    </page>
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Advanced Exercises" title="Projections and Blending" points=10>
+                <task title="Planar Shadows and Particles" points="10" submitfile="cg.cpp, projection.glsl">
+                    <p>
+                        In this exercise, your task is to implement planar shadows for opaque geometry (teapot) and semi-transparent particles (smoke).
+                        The basic algorithm for the scene seen below is:
+                    </p>
+                    <ol>
+                        <li>Render teapot and plane </li>
+                        <li>Render the projection of the teapot onto the plane in black </li>
+                        <li>Render the projection of the particles onto the plane in black</li>
+                        <li>Render particles</li>
+                    </ol>
+                    <p>
+                        Note that the particles are rendered <b>after</b> their shadows. 
+                        This is required because the particles are blended on top of the current image without writing to the depth buffer. 
+                        If we would switch it around the shadows would appear to be in front of the particles when looking from a certain angle. 
+                        You can test this yourself after implementing this exercise by switching the draw order.
+                    </p>
+                    <p>
+                        Subtasks a) and b) focus on planar shadow generation through vertex projection. 
+                        The general idea is to render an object twice, once with the original color and vertex positions, and once in black with all vertices projected onto the ground plane.
+                    </p>
+                    <p>
+                        Subtasks c) to g) address the creation of a simple particle system for steam rendering. 
+                        The steam particles are quads which are always oriented to the camera (billboards) and display an animated noise function. 
+                        The particles are rendered with alpha blending. 
+                        The shadows of the particles are created like the teapot shadows by projecting the billboards onto the ground plane.
+                    </p>
+                    <img class="floatRight" src="images/cg4.png" width=620>
+
+                    <subtask title="Vertex Projection" points="2" type="advanced">
+                        <p>
+                            In the first subtask you have to implement the shadow of the teapot. 
+                            Right now you cannot see shadows when you check the corresponding checkbox in the GUI:
+                            The teapot is already rendered a second time in black with projected vertices,
+                            but so far, the projection in the method <code>projectVertexToPlane</code> of <code> projection.glsl</code> projects each vertex to the origin.
+                            Change the method in order to project each vertex of the teapot mesh onto the ground plane according to the light direction. 
+                            The parameters for <code>projectVertexToPlane</code> are the vertex in world space, the light direction, and two parameters describing the plane pose in world space.
+                        </p>
+                    </subtask>
+
+                    <subtask title="Z-fighting" points="1" type="advanced">
+                        <p>
+                            Once you have implemented the vertex projection correctly, you will see z-fighting of the shadow and the ground plane: 
+                            As they are both rendered at the same positions, either of them "wins" for each pixel due to floating-point imprecision in the depth values.
+                            We could solve that by translating the shadow a constant distance of $\epsilon$ along the normal, 
+                            but the non-linearity in the depth buffer would either produce a "floating" shadow or not remove z-fighting at all, depending on the view distance. 
+                            That is why you should remove z-fighting with <a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml">glPolygonOffset</a> in <code>CG::renderOpaqueGeometryShadows</code>.
+                        </p>
+                    </subtask>
+
+                    <subtask title="Particle Orientation" points="1" type="advanced">
+                        <p>
+                            When you enable the particles right now they are rendered statically in the x-z plane. 
+                            We want to transform them so that they are always oriented towards the camera. 
+                            We achieve this in the following two steps:
+                            <ul>
+                                <li> Rotate them into the x-y plane. </li>
+                                <li> Apply the inverse rotational part of the view matrix. </li>
+                            </ul>
+                        </p>
+                        <p>
+                            The reason why this works is the following: When projecting the particles to view space (i.e. multiplying with the view matrix), 
+                            the rotational part is cancelled out and the particle is still in the x-y plane in view space. 
+                            The implemenation has to be done in <code> CG::renderParticles</code>.
+                        </p>
+                    </subtask>
+
+                    <subtask title="Particle Simulation" points="2" type="advanced">
+                        <p>
+                            In this subtask, particles are animated and resetted after a certain time span to create a continuous steam flow. 
+                            The implementation for this animation has to be done in <code>CG::update</code>. 
+                            First, have a look at <code> struct Particle</code> in <code>cg.h</code>. 
+                            In each timestep, the state of each particle has to be updated. 
+                            The positions of the particles are updated with explicit euler integration:
+                            \[ p_{n+1} = p_{n} + v \Delta t \]
+                            Once a particle is dead (<code>lifetime</code> < 0) it should be reset with the following properties:
+                        </p>
+                        <ul>
+                            <li> Reset <code>position</code> to <code>particleStart</code>. </li>
+                            <li> Set <code>lifetime</code> to a random value. </li>
+                            <li> Set <code>timeoffset</code> to a random value. </li>
+                            <li> Set <code>velocity</code> to a random multiple of <code>planeNormal</code>.
+                            Before multiplying with a constant, offset it by adding a small random vector to create a 'cone like' emission behaviour. </li>
+                        </ul>
+                        <p>
+                            The random values should be chosen in a way that the steam looks 'cool' and similar to the image above.
+                        </p>
+                    </subtask>
+
+                    <subtask title="Particle Blending" points="1" type="advanced">
+                        <p>
+                            At this point, the particles are still rendered as white squares. 
+                            The alpha value is already set in the fragment shader by a noise function, but it is not used while rendering. 
+                            Enable blending and set the correct blend function in <code>CG::renderParticles</code>. 
+                            The following blending behaviour should be met:
+                            \[ C_{dst} = \alpha_{src} C_{src} + (1-\alpha_{src}) C_{dst} \]
+                            with $\alpha_{src}$ being the alpha value of the particle, $C_{src}$ the particle RGB color, and $C_{dst}$ the current framebuffer color. This behaviour is implentend in OpenGL by using <a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBlendFunc.xhtml">glBlendFunc</a> with the arguments <code>GL_SRC_ALPHA</code> and <code>GL_ONE_MINUS_SRC_ALPHA</code>.
+                        </p>
+                    </subtask>
+                    <subtask title="Particle Shadow Orientation" points="2" type="advanced">
+                        <p>
+                            The particles are rendered as billboards which are oriented to the camera. 
+                            If we projected these billboards directly onto the plane, the shadows would change with viewing direction. 
+                            A better approach is to orient the particles <b>towards the light</b> in the shadow pass. 
+                            This can be achieved by creating an <a href="https://en.wikipedia.org/wiki/Orthonormal_basis">orthonormal basis</a> from the light direction. 
+                            Implement <code>mat3 orthonormalBasis(vec3 dir)</code> in <code>cg.cpp</code>. 
+                            The orthonormal basis should be returned as a 3x3 matrix, with each column being one basis vector. 
+                            The third column <code>v[2]</code> should be the negative light direction.
+                        </p>
+                    </subtask>
+
+                    <subtask title="Particle Shadows" points="1" type="advanced">
+
+                        <p>
+                            The projected shadows of the particles will produce z-fighting and are rendered without alpha blending. 
+                            Add a polygon offset to the particle shadows and render them with alpha blending similar to the previous tasks. 
+                            Your implemention has to be done in <code>CG::renderParticleShadows()</code>.
+                        </p>
+                    </subtask>
+
+
+                </task>
+
+            </exercise>
+        </content>
+    </page>
+</body>

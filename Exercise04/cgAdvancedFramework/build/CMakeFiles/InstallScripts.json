@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/cmake_install.cmake",
+		"C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/glew-cmake/cmake_install.cmake",
+		"C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/submodules/SDL/cmake_install.cmake",
+		"C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/src/cmake_install.cmake",
+		"C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build/src/Advanced04/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

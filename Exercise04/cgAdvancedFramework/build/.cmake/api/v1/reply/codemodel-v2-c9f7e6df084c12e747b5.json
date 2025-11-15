@@ -1,0 +1,1144 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "Git::Git::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-Git__Git-Debug-e26faf2d49c702c463f0.json",
+					"name" : "Git::Git",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GL-Debug-96bb0f701aa99cbb677a.json",
+					"name" : "OpenGL::GL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GLU::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GLU-Debug-ae855a96a59e2498853b.json",
+					"name" : "OpenGL::GLU",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl-build-options::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl-build-options-Debug-73905014ca3d5b64770f.json",
+					"name" : "sdl-build-options",
+					"projectIndex" : 2
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f6f22219c74102c3da70.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						7
+					]
+				},
+				{
+					"build" : "submodules/glew-cmake",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodules.glew-cmake-Debug-17c9c505822292fb00d7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "submodules/glew-cmake",
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"build" : "submodules/SDL",
+					"jsonFile" : "directory-submodules.SDL-Debug-ff216587779fb262f61c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "submodules/SDL",
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-src-Debug-1722085f943e0250936a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/Advanced04",
+					"jsonFile" : "directory-src.Advanced04-Debug-d5ae49b17871bdcfa7a9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/Advanced04",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "cgAdvancedFramework",
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						4,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "glew",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL2",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Debug-8878ff5b2dad19110388.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-ALL_BUILD-Debug-0f6fa9f9f895e035f892.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-ALL_BUILD-Debug-476fc0f45455bf23cf76.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "Advanced04::@f29d58f72da2694ba452",
+					"jsonFile" : "target-Advanced04-Debug-47d8e9f17da9161ea300.json",
+					"name" : "Advanced04",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "CG::@145eef247bfb46b6828c",
+					"jsonFile" : "target-CG-Debug-8cb7aa378173e245c2bd.json",
+					"name" : "CG",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2-static::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2-static-Debug-830c1e0d074986893dc2.json",
+					"name" : "SDL2-static",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2main::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2main-Debug-4d20dd35404f766f0a6e.json",
+					"name" : "SDL2main",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Debug-a0a5001753a2b5643e72.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "libglew_static::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-libglew_static-Debug-f7aae5ec075205ab2fb2.json",
+					"name" : "libglew_static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl_headers_copy::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl_headers_copy-Debug-2ae7ac738a1f77107cd1.json",
+					"name" : "sdl_headers_copy",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-uninstall-Debug-9dff68393998cffe0d3b.json",
+					"name" : "uninstall",
+					"projectIndex" : 2
+				}
+			]
+		},
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "Git::Git::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-Git__Git-Release-e26faf2d49c702c463f0.json",
+					"name" : "Git::Git",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GL-Release-96bb0f701aa99cbb677a.json",
+					"name" : "OpenGL::GL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GLU::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GLU-Release-ae855a96a59e2498853b.json",
+					"name" : "OpenGL::GLU",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl-build-options::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl-build-options-Release-73905014ca3d5b64770f.json",
+					"name" : "sdl-build-options",
+					"projectIndex" : 2
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-f6f22219c74102c3da70.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						7
+					]
+				},
+				{
+					"build" : "submodules/glew-cmake",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodules.glew-cmake-Release-25c1a2410140e2ae78a5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "submodules/glew-cmake",
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"build" : "submodules/SDL",
+					"jsonFile" : "directory-submodules.SDL-Release-ff216587779fb262f61c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "submodules/SDL",
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-src-Release-1722085f943e0250936a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/Advanced04",
+					"jsonFile" : "directory-src.Advanced04-Release-d5ae49b17871bdcfa7a9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/Advanced04",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "cgAdvancedFramework",
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						4,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "glew",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL2",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Release-8878ff5b2dad19110388.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-ALL_BUILD-Release-0f6fa9f9f895e035f892.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-ALL_BUILD-Release-476fc0f45455bf23cf76.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "Advanced04::@f29d58f72da2694ba452",
+					"jsonFile" : "target-Advanced04-Release-e96bd721887c2d96810e.json",
+					"name" : "Advanced04",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "CG::@145eef247bfb46b6828c",
+					"jsonFile" : "target-CG-Release-5c954a6283e95602e470.json",
+					"name" : "CG",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2-static::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2-static-Release-1c137bab95edcf458b36.json",
+					"name" : "SDL2-static",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2main::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2main-Release-7dc64e3625ca661ef184.json",
+					"name" : "SDL2main",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Release-a0a5001753a2b5643e72.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "libglew_static::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-libglew_static-Release-2a60ce3c17703b50fdb3.json",
+					"name" : "libglew_static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl_headers_copy::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl_headers_copy-Release-2ae7ac738a1f77107cd1.json",
+					"name" : "sdl_headers_copy",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-uninstall-Release-9dff68393998cffe0d3b.json",
+					"name" : "uninstall",
+					"projectIndex" : 2
+				}
+			]
+		},
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "Git::Git::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-Git__Git-MinSizeRel-e26faf2d49c702c463f0.json",
+					"name" : "Git::Git",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GL-MinSizeRel-96bb0f701aa99cbb677a.json",
+					"name" : "OpenGL::GL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GLU::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GLU-MinSizeRel-ae855a96a59e2498853b.json",
+					"name" : "OpenGL::GLU",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl-build-options::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl-build-options-MinSizeRel-73905014ca3d5b64770f.json",
+					"name" : "sdl-build-options",
+					"projectIndex" : 2
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-MinSizeRel-f6f22219c74102c3da70.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						7
+					]
+				},
+				{
+					"build" : "submodules/glew-cmake",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodules.glew-cmake-MinSizeRel-d0638f52d3f929fadabb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "submodules/glew-cmake",
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"build" : "submodules/SDL",
+					"jsonFile" : "directory-submodules.SDL-MinSizeRel-ff216587779fb262f61c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "submodules/SDL",
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-src-MinSizeRel-1722085f943e0250936a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/Advanced04",
+					"jsonFile" : "directory-src.Advanced04-MinSizeRel-d5ae49b17871bdcfa7a9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/Advanced04",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "MinSizeRel",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "cgAdvancedFramework",
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						4,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "glew",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL2",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-8878ff5b2dad19110388.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-0f6fa9f9f895e035f892.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-476fc0f45455bf23cf76.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "Advanced04::@f29d58f72da2694ba452",
+					"jsonFile" : "target-Advanced04-MinSizeRel-13195660b05ecef1223c.json",
+					"name" : "Advanced04",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "CG::@145eef247bfb46b6828c",
+					"jsonFile" : "target-CG-MinSizeRel-5a6ec2df53951a8ab907.json",
+					"name" : "CG",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2-static::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2-static-MinSizeRel-a77e71eb0eced088dd64.json",
+					"name" : "SDL2-static",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2main::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2main-MinSizeRel-2f160520653933bfd7a5.json",
+					"name" : "SDL2main",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-MinSizeRel-a0a5001753a2b5643e72.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "libglew_static::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-libglew_static-MinSizeRel-7984ddf8249b7ff1ed6c.json",
+					"name" : "libglew_static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl_headers_copy::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl_headers_copy-MinSizeRel-2ae7ac738a1f77107cd1.json",
+					"name" : "sdl_headers_copy",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-uninstall-MinSizeRel-9dff68393998cffe0d3b.json",
+					"name" : "uninstall",
+					"projectIndex" : 2
+				}
+			]
+		},
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "Git::Git::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-Git__Git-RelWithDebInfo-e26faf2d49c702c463f0.json",
+					"name" : "Git::Git",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GL-RelWithDebInfo-96bb0f701aa99cbb677a.json",
+					"name" : "OpenGL::GL",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OpenGL::GLU::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OpenGL__GLU-RelWithDebInfo-ae855a96a59e2498853b.json",
+					"name" : "OpenGL::GLU",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl-build-options::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl-build-options-RelWithDebInfo-73905014ca3d5b64770f.json",
+					"name" : "sdl-build-options",
+					"projectIndex" : 2
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-RelWithDebInfo-f6f22219c74102c3da70.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						7
+					]
+				},
+				{
+					"build" : "submodules/glew-cmake",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodules.glew-cmake-RelWithDebInfo-f87ed36ece93eda3d063.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "submodules/glew-cmake",
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"build" : "submodules/SDL",
+					"jsonFile" : "directory-submodules.SDL-RelWithDebInfo-ff216587779fb262f61c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "submodules/SDL",
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-src-RelWithDebInfo-1722085f943e0250936a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/Advanced04",
+					"jsonFile" : "directory-src.Advanced04-RelWithDebInfo-d5ae49b17871bdcfa7a9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/Advanced04",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2
+					],
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						3,
+						4
+					],
+					"name" : "cgAdvancedFramework",
+					"targetIndexes" : 
+					[
+						0,
+						3,
+						4,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "glew",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						8
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL2",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						5,
+						6,
+						9,
+						10
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-8878ff5b2dad19110388.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-0f6fa9f9f895e035f892.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "ALL_BUILD::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-476fc0f45455bf23cf76.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "Advanced04::@f29d58f72da2694ba452",
+					"jsonFile" : "target-Advanced04-RelWithDebInfo-eef73391d9226dfbe518.json",
+					"name" : "Advanced04",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "CG::@145eef247bfb46b6828c",
+					"jsonFile" : "target-CG-RelWithDebInfo-c0f237478c25bf4f47bc.json",
+					"name" : "CG",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2-static::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2-static-RelWithDebInfo-e6d4e60ac082f9cabe52.json",
+					"name" : "SDL2-static",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL2main::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-SDL2main-RelWithDebInfo-87afe9ef4cc771d7b65f.json",
+					"name" : "SDL2main",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-RelWithDebInfo-a0a5001753a2b5643e72.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "libglew_static::@0b6d7304ab34e9b855f1",
+					"jsonFile" : "target-libglew_static-RelWithDebInfo-b1e9e4e1ac6f6be4c0f1.json",
+					"name" : "libglew_static",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sdl_headers_copy::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-sdl_headers_copy-RelWithDebInfo-2ae7ac738a1f77107cd1.json",
+					"name" : "sdl_headers_copy",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@7bf4f50e94ec765f226d",
+					"jsonFile" : "target-uninstall-RelWithDebInfo-9dff68393998cffe0d3b.json",
+					"name" : "uninstall",
+					"projectIndex" : 2
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework/build",
+		"source" : "C:/Users/Nesselbrand/Desktop/ComputerGraphics/Exercise04/cgAdvancedFramework"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	}
+}

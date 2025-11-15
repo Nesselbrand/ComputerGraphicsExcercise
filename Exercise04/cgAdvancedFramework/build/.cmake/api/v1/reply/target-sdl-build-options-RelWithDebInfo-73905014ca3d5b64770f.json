@@ -1,0 +1,41 @@
+{
+	"abstract" : true,
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library"
+		],
+		"files" : 
+		[
+			"submodules/SDL/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 33,
+				"parent" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"id" : "sdl-build-options::@7bf4f50e94ec765f226d",
+	"name" : "sdl-build-options",
+	"paths" : 
+	{
+		"build" : "submodules/SDL",
+		"source" : "submodules/SDL"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}
