@@ -1,0 +1,25 @@
+# set terminal pngcairo  transparent enhanced font "arial,10" fontscale 1.0 size 600, 400 
+# set output 'simple.1.png'
+set title "Cone Falloff" font ",15"
+set terminal png
+set output 'plot2.png'
+#set key right box
+set samples 400
+
+set xlabel "Angle"
+set ylabel "Intensity"
+
+set yrange[-0.1:1.1]
+a = 60;
+
+f(x) = x < a ? 1 : 0
+
+#g(x,edge0,edge1) = x < edge0 ? 0 : x>edge1 ? 1 : (x - edge0) / (edge1 - edge0)
+
+clamp(x,mi,ma) = x < mi ? mi : x > ma ? ma : x;
+g(x,edge0,edge1) = clamp( (x - edge0) / (edge1 - edge0),0,1)
+f(t) = t * t * (3.0 - 2.0 * t)
+
+smoothstep(a,edge0,edge1) = f(g(a,edge0,edge1))
+
+plot [0:90] smoothstep(x,80,40)

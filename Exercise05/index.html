@@ -1,0 +1,542 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/css/print.css">
+    <!-- explicitly set absent favicon to avoid error message with live server -->
+    <link rel="icon" href="data:,">
+
+    <meta name="lecture" content="Computer Graphics">
+    <meta name="exerciseNr" content="5">
+    <meta name="exercisePrefix" content="Exercise">
+    <meta name="term" content="Winter Term 2025/26">
+    <meta name="dueDate" content="November 24, 2025, 23:55">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript" src="./resources/js/num.js"></script>
+    <script type="text/javascript" src="./Basic/camera.js"></script>
+    <script type="text/javascript" src="./resources/js/FileSaver.js"></script>
+    <script type="text/javascript" src="./resources/js/jszip.js"></script>
+    <script type="text/javascript" src="./resources/js/dispatcher.js"></script>
+    <script type="text/javascript" src="./resources/js/sheet.js"></script>
+
+</head>
+
+
+<body>
+    <!-- global lists to help when saving the solution images TODO check if this can be removed by using the gernetSkeleton script? -->
+    <script>
+        // specify submission canvas ids that need to be saved to binaries (this will be done everytime the page is refreshed!)
+        window.saveIDsToBinaryList = []
+    </script>
+    <script>
+        // specify submission (gl) canvas ids that need to be saved to images (right click is not possible unfortunatly)
+        window.saveGLIDsToImageList = ["canvas2a-1", "canvas2a-2", "canvas2a-3", "canvas2b-1", "canvas2b-2"]
+    </script>
+
+    <!-- initialize session storage, if not yet populated -->
+    <script>
+        if (!sessionStorage.getItem("settings-linear-scale")) { sessionStorage.setItem("settings-linear-scale", 1.0); }
+    </script>
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Basic Exercises" title="Lighting & Shading" points=10>
+
+                <table class="pointsTable floatLeft" type="basic"></table>
+
+                <form class="differenceColor">
+                    <fieldset class="differenceColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="basic" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="basic">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale"> Linear difference scale: <span id="settings-linear-scale-print"></span></label><br>
+                            <input type="range" id="settings-linear-scale" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="zipButton" type="basic" onclick="zipAndDownload('Basic')"> zip basic submission </button>
+
+                <task title="Phong Lighting with Flat and Gouraud Shading in 2D" points=5 submitfile="Basic1.js">
+                    <subtask title="Phong Lighting" points="3" type="basic">
+                        <p>
+                            Phong Lighting approximates the illumination of a surface point $p$ seen from a position $eye$,
+                            assuming that the perceived color of the surface point is composed out of an ambient part,
+                            which tries to model the indirect light from the environment, a diffuse part and a specular part.
+                        </p>
+                        <p>
+                            Below you see the $eye$, the position of the point light source ($light$) and the surface.
+                            The surface is sampled at certain points. You can set a user specific sample using the left mouse button.
+                            Your task is to implement the Phong Lighting, therefore you have to implement the function <code>PhongLighting()</code>.
+                            Note: The light emitted from the light source is assumed to be white so that you can
+                            ignore the terms $I_{amb}$ and $I_{in}$ in the Phong formulae.
+                        </p>
+                        <p>
+                            You can adjust the number of samples shown below: <input type="range" id="nSamples" value="5" min="1" max="100" />
+                        </p>
+                        <p>
+                            <canvas id="canvasPhongLighting" width=600 height=300 data-call="Basic1_1" data-call-src="./Basic/Basic1.js" data-call-p0=5 data-call-p1="vec(20,40)" data-call-p2="vec(580,20)">
+                                <img class="wait">
+                            </canvas>
+                        </p>
+                        <table class="centerContent boxes">
+                            <caption>All testcases have 25 samples, this one depicts the default case </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1a-1" width=200 height=200 data-call="Basic1_1" data-call-src="./Basic/Basic1.js" data-call-p0=25 data-call-p1="vec(20,20)" data-call-p2="vec(180,20)"></canvas></td>
+                                <td><canvas id="sol1a-1" src="images/sol1a-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff1a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-1" data-call-p1="sol1a-1" data-call-p2="1" data-call-p3="50"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+
+                            <table class="centerContent boxes">
+                                <caption>Testcase: different eye position </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-2" width=200 height=200 data-call="Basic1_1" data-call-src="./Basic/Basic1.js" data-call-p0=25 data-call-p1="vec(100,100)" data-call-p2="vec(180,20)"></canvas></td>
+                                    <td><canvas id="sol1a-2" src="images/sol1a-2.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-2" data-call-p1="sol1a-2" data-call-p2="1" data-call-p3="50"></canvas></td>
+                                </tr>
+                            </table>
+                            <table class="centerContent boxes">
+                                <caption>Testcase: different eye and light source position </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-3" width=200 height=200 data-call="Basic1_1" data-call-src="./Basic/Basic1.js" data-call-p0=25 data-call-p1="vec(150,50)" data-call-p2="vec(20,100)"></canvas></td>
+                                    <td><canvas id="sol1a-3" src="images/sol1a-3.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="canvas1-1-diff3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-3" data-call-p1="sol1a-3" data-call-p2="1" data-call-p3="50"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                    <subtask title="Flat Shading" points="1" type="basic">
+                        
+                        <p>
+                            So far, you are only able to compute a color for a single point.
+                            What is missing now is a technique to shade entire primitives (lines in 2D, triangles in 3D).
+                            As you know from the lecture, there are several shading methods.
+                            These methods describe ways to compute the color of illuminated surfaces.
+                            In this subtask we will have a look at Flat Shading, the next one will focus on Gouraud Shading.
+                        </p>
+                        <p>
+                            Flat Shading is the most simple method:
+                            It computes one color per primitive.
+                            Complete the code in <code>Basic1_2</code> to shade the line segments shown in the canvas below.
+                        </p>
+                        <fieldset class="floatRight">
+                            <input type="range" id="nLineSegments2_2" value="5" min="1" max="100" /> number of line segments
+                            <br>
+                            <input type="range" id="amplitude2_2" value="50" min="0" max="100" /> curvature of surface
+                        </fieldset>
+                        <p>
+                            Again, you can adjust how often the Phong Lighting method is evaluated.
+                            For this subtask, this means changing the number of line segments. 
+                            Furthermore, you can adjust how curved the surface should be.
+                        </p>
+                        <p>
+                            <canvas id="canvasFlatShading" width=600 height=300 data-call="Basic1_2" data-call-src="./Basic/Basic1.js" data-call-p0=5 data-call-p1=50 data-call-p2="vec(20, 40)" data-call-p3="vec(580, 20)">
+                                <img class="wait">
+                            </canvas>
+                        </p>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1b-1" width=200 height=200 data-call="Basic1_2" data-call-src="./Basic/Basic1.js" data-call-p0=10 data-call-p1=30 data-call-p2="vec(20, 20)" data-call-p3="vec(180, 20)"></canvas></td>
+                                <td><canvas id="sol1b-1" src="images/sol1b-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff1b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-1" data-call-p1="sol1b-1" data-call-p2="1" data-call-p3="50"></canvas></td>
+                            </tr>
+                        </table>
+
+                    </subtask>
+                    <subtask title="Gouraud Shading" points="1" type="basic">
+                        
+                        <fieldset class="floatRight">
+                            <input type="range" id="nLineSegments2_3" value="5" min="1" max="100" /> number of line segments
+                            <br>
+                            <input type="range" id="amplitude2_3" value="50" min="0" max="100" /> curvature of surface
+                        </fieldset>
+                        <p>
+                            In contrast to Flat Shading, Gouraud Shading computes the color at the vertices and interpolates the color linearly over the primitives.
+                            Follow the <code>TODO</code>s in <code>Basic1_2</code> and implement Gouraud Shading for the line segments.
+                        </p>
+                        <p>
+                            <canvas id="canvasGouraudShading" width=600 height=300 data-call="Basic1_3" data-call-src="./Basic/Basic1.js" data-call-p0=5 data-call-p1=50 data-call-p2="vec(20, 40)" data-call-p3="vec(580, 20)">
+                                <img class="wait">
+                            </canvas>
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1c-1" width=200 height=200 data-call="Basic1_3" data-call-src="./Basic/Basic1.js" data-call-p0=10 data-call-p1=30 data-call-p2="vec(20, 20)" data-call-p3="vec(180, 20)"></canvas></td>
+                                <td><canvas id="sol1c-1" src="images/sol1c-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff1c-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-1" data-call-p1="sol1c-1" data-call-p2="1" data-call-p3="50"></canvas></td>
+                            </tr>
+                        </table>
+                    </subtask>
+                </task>
+
+                <task title="Phong Lighting with Phong Shading in 3D" points=5 submitfile="shader_phong.vs, shader_phong.fs">
+                    <img id="height_field" width=298 height=212 src='./images/heightfield.png' style="display:none" />
+                    <fieldset class="floatRight">
+                        <p>
+                            <input type=checkbox name="lightRotation" value="true" checked /> light rotation
+                        </p>
+                        <p>
+                            $n_{shiny}$: <input type="range" id="shiny" value="100" min="10" max="1000" />
+                        </p>
+                        <p>
+                            <input type=checkbox name="phongTerm" value="true" checked /> ambient term
+                        </p>
+                        <p>
+                            <input type=checkbox name="phongTerm" value="true" /> diffuse term
+                        </p>
+                        <p>
+                            <input type=checkbox name="phongTerm" value="true" /> specular term
+                        </p>
+                    </fieldset>
+                    <p>
+                        In this task, you should implement Phong Lighting on a 3D terrain.
+                        As you know from the previous task, the Phong Lighting model consists of three terms:
+                        the ambient, diffuse and specular term.
+                        Right now, the terrain is only shaded with the constant ambient term, which results in an image difficult to interpret:
+                        Every pixel of the terrain has the same color and you can hardly see the two hills and the two valleys of the terrain.
+                        It is your task to add diffuse and specular term to make the scene look more realistic.
+                    </p>
+                    <p>
+                        Unlike in the last task, you should not perform Flat or Gouraud Shading: To make the hills and valleys look good, you should
+                        implement Phong Shading. Therefore, you should not interpolate colors, but normals and positions. Using them in the fragment
+                        shader for lighting computations, you can determine colors on a per-fragment basis.
+                    </p>
+                    <center>
+                        <canvas id="canvasShading3D" width=600 height=600 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0="0" data-call-p1="true" data-call-p2="false" data-call-p3="false" data-call-p4="50">
+                            <img class="wait">
+                            <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_phong.vs"></shader>
+                            <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_phong.fs"></shader>
+                            <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                            <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                        </canvas>
+                    </center>                    
+                    </p>
+                    <subtask title="Diffuse Term" points="3" submitfile="shader_phong.vs, shader_phong.fs" type="basic">
+                        <p>
+                            Follow the instructions in <code>shader_phong.vs</code> and <code>shader_phong.fs</code> to
+                            produce the diffuse part of the illumination. Once you are done, you will be able to recognize the
+                            hills and valleys by the illumination changes when the light source moves over the terrain.
+                        </p>
+
+                        <p>For the first two testcases, the ambient term is turned off.</p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2a-1" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0="5000" data-call-p1="false" data-call-p2="true" data-call-p3="false" data-call-p4="100">
+                                    <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_phong.vs"></shader>
+                                    <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_phong.fs"></shader>
+                                    <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                    <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                </canvas></td>
+                                <td><canvas id="sol2a-1" src="images/sol2a-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff2a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-1" data-call-p1="sol2a-1" data-call-p2="1" data-call-p3="500" data-call-p4="true"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                             <table class="centerContent boxes">
+                                <caption>Testcase: different light position </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2a-2" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0="1000" data-call-p1="false" data-call-p2="true" data-call-p3="false" data-call-p4="100">
+                                        <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_phong.vs"></shader>
+                                        <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_phong.fs"></shader>
+                                        <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                        <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                    </canvas></td>
+                                    <td><canvas id="sol2a-2" src="images/sol2a-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff2a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-2" data-call-p1="sol2a-2" data-call-p2="1" data-call-p3="500" data-call-p4="true"></canvas></td>
+                                </tr>
+                            </table>
+                             <table class="centerContent boxes">
+                                 <caption>Testcase: ambient term turned on and different light position </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2a-3" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0="3000" data-call-p1="true" data-call-p2="true" data-call-p3="false" data-call-p4="100">
+                                        <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_phong.vs"></shader>
+                                        <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_phong.fs"></shader>
+                                        <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                        <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                    </canvas></td>
+                                    <td><canvas id="sol2a-3" src="images/sol2a-3.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff2a-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-3" data-call-p1="sol2a-3" data-call-p2="1" data-call-p3="500" data-call-p4="true"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                    <subtask title="Specular Term" points="2" submitfile="shader_phong.fs" type="basic">
+                        <p>
+                            Follow the instructions in <code>shader_phong.fs</code> to produce the specular part of the illumination.
+                            Once you are done, you can experiment with this view-dependent part of the illumination. Use the keys A
+                            and D to turn around the camera and see how the specular reflections move, this works only for the first big canvas for of this task.
+                            This effect can be observed better when the light source movement is turned off. You can control the shininess of the surface by using the slider.
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2b-1" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0="10000" data-call-p1="true" data-call-p2="true" data-call-p3="true" data-call-p4="100">
+                                    <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_phong.vs"></shader>
+                                    <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_phong.fs"></shader>
+                                    <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                    <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                </canvas></td>
+                                <td><canvas id="sol2b-1" src="images/sol2b-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff2b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2b-1" data-call-p1="sol2b-1" data-call-p2="1" data-call-p3="750" data-call-p4="true"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <caption>Testcase: lower shininess </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas2b-2" width=200 height=200 data-call="Basic2" data-call-src="./Basic/Basic2.js" data-call-p0="10000" data-call-p1="true" data-call-p2="true" data-call-p3="true" data-call-p4="16">
+                                        <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_phong.vs"></shader>
+                                        <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_phong.fs"></shader>
+                                        <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                        <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                    </canvas></td>
+                                    <td><canvas id="sol2b-2" src="images/sol2b-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff2b-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2b-2" data-call-p1="sol2b-2" data-call-p2="1" data-call-p3="750" data-call-p4="true"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                </task>
+
+            </exercise>
+        </content>
+    </page>
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Advanced Exercises" title="Light Types" points=10>
+
+                <task title="Lighting" points=10 submitfile="light_types.glsl">
+                    <p>
+                        From the lecture, you already know three different typical types of light sources:
+                        <ol>
+                            <li>
+                                <b>directional light</b>
+                                <ul>
+                                    <li>
+                                        a light source located infinitely far away
+                                    </li>
+                                    <li>
+                                        constant light direction and intensity for every surface point
+                                    </li>
+                                    <li>
+                                        example in our scene: the sun
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <b>point light</b>
+                                <ul>
+                                    <li>
+                                        a light source that can be approximated by a single point
+                                    </li>
+                                    <li>
+                                        light direction varying with surface point, intensity falling of with distance
+                                    </li>
+                                    <li>
+                                        example in our scene: the fire
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <b>spot light</b>
+                                <ul>
+                                    <li>
+                                        a light source with a limited cone angle
+                                    </li>
+                                    <li>
+                                        similar to a point light, but light only emitted within a certain opening angle
+                                    </li>
+                                    <li>
+                                        example in our scene: the lantern
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </p>
+                    <p>
+                        In the first four subtasks you are asked to implement the lighting for all light types in the fragment shader (<code>light_types.glsl</code>).
+                        For each of the three light sources a <code>vec3</code> containing the incoming light is computed.
+                        These three colors are then added together giving us the final color of each pixel.
+                        The light attributes such as color and position are already passed to the shader in the <code>struct Light</code>. Use these uniforms in the following subtasks.
+                        The final image should look like this:
+                    </p>
+                    <p>
+                        <img src="images/adv1.png" width=600>
+                    </p>
+
+                    <subtask title="Phong Lighting" points="2" type="advanced">
+                        <p>
+                            Each light type in subtasks b) to d) computes the color with the Phong Shading model.
+                            Implement the method <code>vec3 phong(Light light, vec3 surfaceColor, vec3 n, vec3 l, vec3 v)</code> in <code>light_types.glsl</code>.
+                            This function takes the light, surface, and camera parameters as inputs and returns the shaded color. Hint: Basic exercise 5.2 ;).
+                        </p>
+                    </subtask>
+
+
+                    <subtask title="Directional Light" points="1" type="advanced">
+                        <p>
+                            Use the <code>phong</code> method from above to compute the color contribution of the directional light.
+                            Once you are done, you should be able to see bonfire, teapot, lantern and armadillo lit by a directional light source.
+                            Now you can test your implementation of subtask 5.4a) by altering the parameters for the directional light and observing the results.
+                        </p>
+                    </subtask>
+
+                    <subtask title="Point Light" points="2" type="advanced">
+                        <p>
+                            Compute the color contribution of the point light.
+                            Use the <code>phong</code> method again, but don't forget that the light direction is different for every surface point and the intensity falls of with distance.
+                            We are using a quadratic light attenuation function:
+                            \[I = \frac{I_{0}}{a + b r + c r^2} \]
+                            The coefficients $a,b,c$ are the parameters of the quadratic polynomial and are stored in the uniform <code>light.attenuation</code> as a <code>vec3</code>(a,b,c).
+                            $I_{0}$ is the initial intensity computed with <code>phong</code> and $I$ the remaining intensity at distance $r$.
+                        </p>
+                        <p>
+                            As soon as you have implemented this task, play around with the attenuation parameters in the GUI and see how changes affect the lighting.
+                            In the next image, a few example attenuation functions are shown.
+                            If we set the constant and linear coefficients to zero the intensity goes to infinity close to the light (purple line).
+                        </p>
+                        <p>
+                            <img src="images/plot1.png" width=600>
+                        </p>
+
+
+                    </subtask>
+
+                    <subtask title="Spot Light" points="3" type="advanced">
+                        <p>
+                            Spot lights behave similar to point lights in terms of shading and attenuation.
+                            Copy and paste the relevant code from the previous subtask, but make sure to use the <code>spotLight</code> uniforms instead.
+                            In addition, light should only be emitted in a cone with angle <code>spotLight.angle</code> and direction <code>spotLight.direction</code>.
+                        </p>
+                        <p>
+                            As a first step, compute the angle of the current fragment with respect to the cone and set the intensity to 0 if this angle is larger than the cone angle. 
+                            If you implemented this correctly a hard edge will be visible between pixels inside and outside the cone.
+                        </p>
+                        <p>
+                            Remove the hard edge by fading out the intensity towards the cone angle. 
+                            The angle at which fading should start can be computed by multiplying the cone angle with the <code>sharpness</code> parameter of the spot light. 
+                            For example, with <code>coneAngle=80</code> and <code>sharpness=0.8</code>, the spotlight intensity should fade out between 64 and 80 degrees. 
+                            Use the built-in <a href="https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/smoothstep.xhtml">smoothStep</a> function.
+                            The plot below shows its course for the case <code>coneAngle=80</code> and <code>sharpness=0.5</code>
+                        </p>
+
+                        <p>
+                            <img src="images/plot2.png" width=600>
+                        </p>
+
+                    </subtask>
+
+
+
+
+
+                    <subtask title="Simple Cell Shading" points=2 type="advanced">
+                        <p>
+                            In this task you are asked to implement simple cell shading. 
+                            The basic principle is that the colors are quantized, creating the look that the image was drawn by hand with a finite amount of colors.
+                        </p>
+
+
+                        <p>
+                            Implement the color quantization in <code>light_types.glsl</code>. 
+                            Each light color (for the three light types) should be quantized before they are added up. 
+                            The quantization should happen in HSV color space on the brightness value. 
+                            Use the functions <code>rgb2hsv</code> and <code>hsv2rgb</code> to convert between RGB and HSV. 
+                            The quantized HSV color for each light should take only three possible brightness values (0, 0.5 and 1),
+                            which should cover equally sized value spans of the original brightness value.
+                        </p>
+                        <p>
+                            <img src="images/adv2.png" width=600>
+                        </p>
+
+
+                    </subtask>
+
+
+            </exercise>
+        </content>
+    </page>
+</body>
