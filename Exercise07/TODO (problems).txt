@@ -1,0 +1,12 @@
+TASK 1:
+
+Problem: What would be the test case?
+-> Idea: have the cannocial value be the testcase, add Clickable Text/Button in the testcase description that reproduces the settings in the interactable canvas
+-> Alternative: Have very sparse pixel data with using the whole scene as testcase :/
+
+
+TASK 2:
+
+Problem: x3d...
+-> Try extracting cavnas data from internal canvas after x3d has loaded (canvas is literaly just a child/property). Requires extra handling in dispatcher/html/compare
+-> No real alternatives afaik :/

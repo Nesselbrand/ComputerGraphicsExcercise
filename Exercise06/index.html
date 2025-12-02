@@ -1,0 +1,613 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/css/print.css">
+    <!-- explicitly set absent favicon to avoid error message with live server -->
+    <link rel="icon" href="data:,">
+
+    <meta name="lecture" content="Computer Graphics">
+    <meta name="exerciseNr" content="6">
+    <meta name="exercisePrefix" content="Exercise">
+    <meta name="term" content="Winter Term 2025/26">
+    <meta name="dueDate" content="December 01, 2025, 23:55">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript" src="./resources/js/num.js"></script>
+    <script type="text/javascript" src="./Basic/camera.js"></script>
+    <script type="text/javascript" src="./resources/js/FileSaver.js"></script>
+    <script type="text/javascript" src="./resources/js/jszip.js"></script>
+    <script type="text/javascript" src="./resources/js/dispatcher.js"></script>
+    <script type="text/javascript" src="./resources/js/sheet.js"></script>
+
+</head>
+
+
+<body>
+    <!-- global lists to help when saving the solution images -->
+    <script>
+        window.saveIDsToBinaryList = ["canvas1a-1", "canvas1a-2", "canvas1a-3", "canvas1b-1", "canvas1b-2", "canvas1b-3", "canvas2a-1", "canvas2b-1", "canvas2c-1"];
+        // specify submission (gl) canvas ids that need to be saved to images (right click is not possible in some browsers unfortunatly)
+        window.saveGLIDsToImageList = ["canvas3a-1", "canvas3a-2", "canvas3b-1"];
+    </script>
+
+    <!-- initialize session storage, if not yet populated -->
+    <script>
+        if (!sessionStorage.getItem("settings-linear-scale")) { sessionStorage.setItem("settings-linear-scale", 1.0); }
+    </script>
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Basic Exercises" title="Texturing" points=10>
+
+                <table class="pointsTable floatLeft" type="basic"></table>
+
+                <form class="differenceColor">
+                    <fieldset class="differenceColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="basic" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="basic">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale"> Linear difference scale: <span id="settings-linear-scale-print"></span></label><br>
+                            <input type="range" id="settings-linear-scale" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="zipButton" type="basic" onclick="zipAndDownload('Basic')"> zip basic submission </button>
+                
+                <task title="Bilinear Interpolation / MIP Mapping" points=5 submitfile="Basic1.js">
+                    <subtask title="Bilinear Interpolation" points=2 submitfile="Basic1.js" type="basic">
+                        <p>
+                            In the context of textures, bilinear interpolation is very important.
+                            Below, you can see the nearest neighbor interpolation for every testcase, going from left to right.
+                            Your task is to implement the bilinear interpolation instead of nearest neighbor interpolation, as shown in the "Solution" of the testcases.
+                            Colors are given at the black or white points, the nearest neighbor interpolation shows you which colors the points have.
+                        </p>
+                        <p>
+                            Follow the instructions in the source code and implement the bilinear sampling method <code>Basic1a.sampleBilinear</code>.
+                            Make use of the given helper functions.
+                        </p>
+                        <p>
+                            <center>
+                                <canvas style="padding:0px; margin:0px;" id="canvasBasic1a-checker" width=200 height=200 data-call="Basic1a" data-call-src="./Basic/Basic1.js" data-call-p0="checker" data-call-p1="true"></canvas>
+                                <canvas style="padding:0px; margin:0px;" id="canvasBasic1a-floodlight" width=200 height=200 data-call="Basic1a" data-call-src="./Basic/Basic1.js" data-call-p0="floodlight" data-call-p1="true"></canvas>
+                                <canvas style="padding:0px; margin:0px;" id="canvasBasic1a-random" width=200 height=200 data-call="Basic1a" data-call-src="./Basic/Basic1.js" data-call-p0="random" data-call-p1="true"></canvas>
+                            </center>
+                        </p>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1a-1" width=200 height=200 data-call="Basic1a" data-call-src="./Basic/Basic1.js" data-call-p0="checker"></canvas></td>
+                                <td><canvas id="sol1a-1" src="images/sol1a-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-1" data-call-p1="sol1a-1" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-2" width=200 height=200 data-call="Basic1a" data-call-src="./Basic/Basic1.js" data-call-p0="floodlight"></canvas></td>
+                                    <td><canvas id="sol1a-2" src="images/sol1a-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-2" data-call-p1="sol1a-2" data-call-p2="0.5" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-3" width=200 height=200 data-call="Basic1a" data-call-src="./Basic/Basic1.js" data-call-p0="random"></canvas></td>
+                                    <td><canvas id="sol1a-3" src="images/sol1a-3.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1a-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-3" data-call-p1="sol1a-3" data-call-p2="0.5" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+
+                    <subtask title="MIP Mapping" points=3 submitfile="Basic1.js" type="basic">
+                        <p>
+                            This subtask is about <b>MIP Mapping</b>.
+                            The first goal is to build the MIP map pyramid in the lower right of the canvas.
+                            Follow the instructions in the constructor <code>MipMap(texture1D, nLevelMax)</code>.
+                            After implementation you should see the three coarser levels of the MIP map pyramid depicted in color beneath the texture, which are currently just black.
+                        </p>
+                        <p>
+                            Next, you should use the MIP map pyramid to set the colors of the pixels in the image plane.
+                            Currently we always use the finest level of the pyramid.
+                            You have to adapt the code in <code>Basic1b.DetermineMipMapLevelOfPixel(i)</code> accordingly.
+                            The idea is to compute the footprint of a pixel projected into the texture, which is represented by the grey dashed lines in the below image.
+                            If the footprint is larger than the texel size of a level, you should use a coarser level.
+                            The footprint of a pixel can be computed by the distance of the top and bottom texture coordinate of the pixel.
+                            These coordinates are already computed, see comments in the source code.
+                        </p>
+                        <p>
+                            You can adjust the number of pixels on the image plane shown below: <input type="range" id="nPixels" value="2" min="1" max="16" />
+                        </p>
+                        <canvas class="floatLeft" id="canvasBasic1b" width=600 height=300 data-call="Basic1b" data-call-src="./Basic/Basic1.js" data-call-p0=2>
+                            <img class="wait">
+                        </canvas>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1b-1" width=200 height=200 data-call="Basic1b" data-call-src="./Basic/Basic1.js" data-call-p0=2></canvas></td>
+                                <td><canvas id="sol1b-1" src="images/sol1b-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff1b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-1" data-call-p1="sol1b-1" data-call-p2="1" data-call-p3="50" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <caption>Testcase: 4 pixels </caption>
+                                <tr>
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1b-2" width=200 height=200 data-call="Basic1b" data-call-src="./Basic/Basic1.js" data-call-p0=4></canvas></td>
+                                    <td><canvas id="sol1b-2" src="images/sol1b-2.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1b-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-2" data-call-p1="sol1b-2" data-call-p2="1" data-call-p3="50" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                            <table class="centerContent boxes">
+                                <caption>Testcase: 6 pixels</caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1b-3" width=200 height=200 data-call="Basic1b" data-call-src="./Basic/Basic1.js" data-call-p0=6></canvas></td>
+                                    <td><canvas id="sol1b-3" src="images/sol1b-3.bin" width="200" height="200"></canvas></td>
+                                    <td><canvas id="diff1b-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-3" data-call-p1="sol1b-3" data-call-p2="1" data-call-p3="25" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+
+                    </subtask>
+                </task>
+
+                <task title="Perspective Contortion" points=2 submitfile="Basic2.js">
+                    <p>
+                        This assignment will give you a look at perspective contortion and its consequences for rasterization.
+                        A triangle $\Delta RGB$ with $R = (0.5, -0.5, -1)^T$, $G = (0, 3, -4)^T$ and $B = (-3, -1, -4)^T$ is given.
+                        The vertex $R$ is in red, $G$ in green and $B$ in blue.
+                        This triangle contains another triangle which consists of the centers of the edges $RG$, $GB$ and $BR$.
+                        Furthermore, a projection matrix $M$ is given which transforms $\Delta RGB$ such that $R'$ lies at the near plane and $G'$ and $B'$ lie on the far plane.
+                        $$
+                        M=\left[
+                        \begin{array}{rrrr}
+                        1 & 0 & 0 & 0 \\
+                        0 & 1 & 0 & 0 \\
+                        0 & 0 & -2 & -3 \\
+                        0 & 0 & -1 & 0
+                        \end{array}
+                        \right]
+                        $$
+                    </p>
+                    <subtask title="Apply Transformation" points=0.5 type="basic">
+                        <p>
+                           Compute the transformed and dehomogenized vertices $R'$, $G'$ and $B'$.
+                           Make use of the given helper functions (see comments in the source file).
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2a-1" width=200 height=200 data-call="Basic2a" data-call-src="./Basic/Basic2.js"></canvas></td>
+                                <td><canvas id="sol2a-1" src="images/sol2a-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff2a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2a-1" data-call-p1="sol2a-1" data-call-p2="0.5" data-call-p3="50" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                    </subtask>
+                    <subtask title="Uncorrected Centers" points=0.5 type="basic">
+                        <p> 
+                            Compute the centers of the edges $P_{R',G'}$, $P_{G',B'}$ and $P_{B',R'}$ from $R'$, $G'$ and $B'$.
+                            Take note, that the inner triangle is not perspectively correct. The interpolation is similar to a barycentric interpolation.
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2b-1" width=200 height=200 data-call="Basic2b" data-call-src="./Basic/Basic2.js"></canvas></td>
+                                <td><canvas id="sol2b-1" src="images/sol2b-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff2b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2b-1" data-call-p1="sol2b-1" data-call-p2="0.5" data-call-p3="50" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                    </subtask>
+                    <subtask title="Perspective Correction" points=1 type="basic">
+                        <p>
+                            Compute the transformed and dehomogenized centers of the edges $P_{R,G}'$, $P_{G,B}'$ and $P_{B,R}'$ from $P_{R,G}$, $P_{G,B}$ and $P_{B,R}$.
+                            This makes the inner triangle perspectively correct.
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas2c-1" width=200 height=200 data-call="Basic2c" data-call-src="./Basic/Basic2.js"></canvas></td>
+                                <td><canvas id="sol2c-1" src="images/sol2c-1.bin" width="200" height="200"></canvas></td>
+                                <td><canvas id="diff2c-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas2c-1" data-call-p1="sol2c-1" data-call-p2="1" data-call-p3="50" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                    </subtask>
+                </task>
+
+                <task title="Textures in WebGL" points=3  submitfile="Basic3.js, shader_texture.vs, shader_texture.fs">
+                    <img id="checkerboard" src='./resources/checkerboard.png' style="display:none" />
+                    <img id="cobblestone" src='./resources/cobblestone.png' style="display:none" />
+
+                    <p>
+                        In this task you should texture a plane, at first with a texture containing colors and after that with a texture
+                        containing normals. Right now, you can see the plane (which is colored grey) from the top. You can change
+                        the viewing angle using the <code>W</code> and <code>S</code> keys. There is a point light source hovering
+                        over the plane, like in the Phong shading task of Basic Exercise 5.
+                    </p>
+
+                    <fieldset class="floatLeft">
+                        <p>
+                            <input type="radio" name="texture" value="checkerboard" checked> checkerboard texture
+                            <span style="display:inline-block; width:100px;"></span>
+                            <input type="radio" name="texture" value="cobblestone" > cobblestone normal texture
+                        </p>
+                        <p>
+                            checkerboard scale <input id="checkersize" type="range" min="1.0" max="7.0" step="2.0" />
+                        </p>
+                        <p>
+                            <span style="display:inline-block; width:30px;"></span>
+                            <input type="checkbox" id="repeat" > repeat the texture
+                        </p>
+                        <p>
+                            <span style="display:inline-block; width:30px;"></span>
+                            <input type="checkbox" id="mipmap" > enable MIP mapping
+                        </p>
+                    </fieldset>
+                    
+                    <canvas class="floatLeft" id="canvasTexturing" width=600 height=600 data-call="Basic3" data-call-src="./Basic/Basic3.js"  data-call-p0="true" data-call-p1="false" data-call-p2="false" data-call-p3=0 data-call-p4=7.0 data-call-p5=0>
+                        <img class="wait">
+                        <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_texture.vs"></shader>
+                        <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_texture.fs"></shader>
+                        <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                        <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                    </canvas>
+                   
+                    <subtask title="Texture Mapping" points="2" type="basic">
+                        <img class="floatRight" id="checkerboard_show" width="150" height="150" src='./resources/checkerboard.png' />
+                        <p>
+                            On the right, you see a checkerboard texture. Several steps are needed to apply this texture
+                            to the plane.
+                        </p>
+                        <p>
+                            <ol>
+                                <li>
+                                    Set up the texture from the provided image.
+                                </li>
+                                <li>
+                                    In the vertex shader you can find an attribute for the texture coordinates. Define a varying
+                                    variable to pass them to the fragment shader. Assign the attribute to the varying variable.
+                                    Note that the WebGL warning "WebGL warning: vertexAttribPointer: -1 is not a valid index."
+                                    will disappear once you have done this. The warning appears because when <code>vTexCoord</code> is
+                                    unused, the shader compiler omits it and its location cannot be found.
+                                </li>
+                                <li>
+                                    In the fragment shader, define the same varying variable to receive the texture coordinates
+                                    from the vertex shader. Define a uniform sampler holding the texture to be passed, and sample
+                                    the texture at the texture coordinates.
+                                </li>
+
+                            </ol>
+                        </p>
+                        <p>
+                            Once the texture is set up correctly, you see the texture in the upper left corner of the plane,
+                            where the texture coordinates are smaller than $1$. To repeat the texture for texture coordinates greater than $1$ rather than clamping
+                            it to the nearest value, you can check the associated checkbox. Have a look at <code>onChangeRepeat()</code>
+                            to see how it works.
+                        </p>
+                        <p>
+                            As soon as repeating is enabled, the texture covers the entire plane. When you change the checkerboard scale to the minimum by adjusting 
+                            the slider and look at the plane from a shallower view angle, however, minification occurs in areas farther away, and ugly patterns arise.
+                            To change this, enable MIP mapping by checking the associated checkbox. Have a look at <code>onChangeMipmap()</code>
+                            to see how it works.
+                        </p>
+                        
+                        <table class="centerContent boxes">
+                            <caption>Testcase: repeated texture, without MIP mapping </caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas3a-1" width=200 height=200 data-call="Basic3" data-call-src="./Basic/Basic3.js" data-call-p0="true" data-call-p1="true" data-call-p2="false" data-call-p3=0 data-call-p4=2.0 data-call-p5=1000>
+                                    <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_texture.vs"></shader>
+                                    <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_texture.fs"></shader>
+                                    <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                    <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                </canvas></td>
+                                <td><canvas id="sol3a-1" src="images/sol3a-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff3a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-1" data-call-p1="sol3a-1" data-call-p2="1" data-call-p3="100" data-call-p4="true"></canvas></td>
+                            </tr>
+                        </table>
+
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <caption>Testcase: repeated texture applied correctly, with MIP mapping </caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas3a-2" width=200 height=200 data-call="Basic3" data-call-src="./Basic/Basic3.js" data-call-p0="true" data-call-p1="true" data-call-p2="true" data-call-p3=0 data-call-p4=2.0 data-call-p5=1000>
+                                        <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_texture.vs"></shader>
+                                        <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_texture.fs"></shader>
+                                        <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                        <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                    </canvas></td>
+                                    <td><canvas id="sol3a-2" src="images/sol3a-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff3a-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3a-2" data-call-p1="sol3a-2" data-call-p2="1" data-call-p3="100" data-call-p4="true"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+                    <subtask title="Normal Mapping" points="1" type="basic">
+                        <img class="floatRight" id="cobblestone_show" width="150" height="150" src='./resources/cobblestone.png' />
+                        <p>
+                            A texture can also be used to store additional information of a surface, such as normals. On the right,
+                            you see a so-called normal map which stores normals encoded as RGB triplets. Once these normals are used
+                            for lighting computation in the fragment shader, the plane does not look flat anymore, but as if covered with
+                            cobblestone. Find the appropriate <code>TODO</code>s in the two submission files and apply the normal
+                            map to the plane! You can reuse the texture coordinates already used in the first subtask.
+                            Be aware of two things: First, the normals are stored as colors, which means that their values have
+                            been mapped to $[0,1]$. You have to bring them back to $[-1,1]$ to use the normals. Second, unlike in the last
+                            subtask, the plane should be covered with one single, unrepeated instance of the texture. Therefore, you have
+                            to change the texture coordinates to be in range $[0,1]$ rather than $[0,width]$ and $[0,height]$, respectively
+                            ($width$ and $height$ are given in the uniform <code>planeSize</code>!).
+                        </p>
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas3b-1" width=200 height=200 data-call="Basic3" data-call-src="./Basic/Basic3.js" data-call-p0="false" data-call-p1="false" data-call-p2="false" data-call-p3=0 data-call-p4=1.0 data-call-p5=0>
+                                    <shader id="shader-vs-phong" type="--vertex" src="./Basic/shader_texture.vs"></shader>
+                                    <shader id="shader-fs-phong" type="--fragment" src="./Basic/shader_texture.fs"></shader>
+                                    <shader id="shader-vs-light" type="--vertex" src="./Basic/shader_light.vs"></shader>
+                                    <shader id="shader-fs-light" type="--fragment" src="./Basic/shader_light.fs"></shader>
+                                </canvas></td>
+                                <td><canvas id="sol3b-1" src="images/sol3b-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff3b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas3b-1" data-call-p1="sol3b-1" data-call-p2="1" data-call-p3="100" data-call-p4="true"></canvas></td>
+                            </tr>
+                        </table>
+                    </subtask>
+                    
+
+                </task>
+            </exercise>
+        </content>
+    </page>
+
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Advanced Exercises" title="Spherical Texture Mapping" points=10>
+
+
+                <task title="Spherical Coordinates" points=3 submitfile="helper.glsl, universe.glsl">
+                    <p>
+                        Spherical coordinates are used to describe positions on a sphere. 
+                        They consist of two angles $\Theta$ (=theta) and $\Phi$ (=phi) and the distance $r$ of the point to the sphere center. 
+                        In this exercise we are only interested in surface points of the unit sphere. Therefore, the radius is neglected. 
+                        Check out the <a href="http://mathworld.wolfram.com/SphericalCoordinates.html">Wolfram</a> article for more informations, 
+                        but keep in mind that we use a slightly different coordinate system with x pointing to the right and y upwards.
+                    </p>
+
+                    <subtask title="Coordinate Conversions" points="2" type="advanced">
+                        <p>
+                            Given a point $X = (x,y,z)$ with $|X| = 1$, the spherical coordinates of $X$ are:
+                            \[ \Theta = \text{tan}^{-1} \left( \frac{z}{x} \right) \]
+                            \[ \Phi = \text{cos}^{-1} \ y  \]
+                            Compute the spherical coordinates of a point in the function <code>cartesianToSpherical</code> in <code>helper.glsl</code>. Return the angles in a vector of the form <code>vec2(theta,phi)</code>.
+                        </p>
+                        <p>
+                            The transformation from spherical coordinates back to cartesian coordinates is defined as:
+                            \[ x = \text{sin} \ \Phi \ \text{cos} \ \Theta \]
+                            \[ y = \text{cos} \ \Phi  \]
+                            \[ z = \text{sin} \ \Phi \ \text{sin} \ \Theta \]
+                            Compute this conversion in <code>sphericalToCartesian</code>.
+                        </p>
+
+                        <p>
+                            As you have seen in the basic exercise, the texture coordinates u and v are in the range [0,1]. 
+                            Unfortunately, $\Theta$ is in the range $[-\pi,\pi]$ and $\Phi$ in the range $[0,\pi]$. 
+                            Implement the function <code>sphericalToTexture</code> that maps the spherical coordinates to texture coordinates. 
+                            Note that the texture coordinates must be <b>mirrored</b> to give correct results.
+                        </p>
+
+                    </subtask>
+
+
+                    <subtask title="The Universe" points="1" type="advanced">
+                        <p>
+                            In this task we want to show a universe texture in the background. 
+                            For this purpose a screen space quad is already rendered behind every other object. 
+                            Compute the world position of each fragment of the quad in <code>universe.glsl</code>. 
+                            After that, compute the viewing direction in world space and use the method implemented in the previous exercise to sample the universe texture. 
+                            If everything is correct your scene should look like this:
+                        </p>
+                        <img class="floatRight" src="images/universe.png" width=600>
+                    </subtask>
+                </task>
+
+
+                <task title="Earth Texture Mapping" points=7 submitfile="earth.glsl, clouds.glsl">
+                    <p>
+                        <b>Important:</b> </br>
+                        To better visualize the effect of bump mapping on the mesh, we added tesselation to dynamically subdivide each triangle in multiple smaller triangles. 
+                        You do not have to care about the tesselation process because everything is already implemented, but you have to know that each vertex of the fine mesh is passed through the "Tesselation Evaluation" shader. 
+                        This "Tesselation Evaluation" shader behaves identically to a vertex shader and variables can be passed to the fragment shader like you have done it before. 
+                        That is why when we talk about the vertex shader in the following tasks, we actually mean the tesselation evaluation shader. 
+                        If you are interested and want to know more about tesselation, feel free to read the code, ask the tutors, search the web, and of course join our "Interactive Computer Graphics" lecture in the next semester :).
+                    </p>
+
+                    <subtask title="Day and Night Shading" points="1" type="advanced">
+                        <p>
+                            The basic Phong shading you know from previous exercises is already implemented. 
+                            In this task we want to show the 'night texture' of the earth (lights around big cities etc.) when the surface is facing away from the light. 
+                            Read from the day and night texture and blend between these values in <code>earth.glsl</code>. 
+                            Make sure the transition is smooth. 
+                            The texture coordinates are passed in the variable <code>tc</code> and should already be correct if you implemented the previous task.
+                        </p>
+                        <p>
+                            Once you have mapped the color textures to the sphere, you will notice a seam where the left and right edge of the texture meet on the sphere.
+                            This is expected behaviour as the texture coordinates of 0 and 1 meet here, you do not need to fix it.
+                        </p>
+                    </subtask>
+                    <subtask title="Specular Light" points="1" type="advanced">
+                        <p>
+                            The specular coefficient (not the exponent!) for each earth surface point is stored in the 'earthSpec' texture. 
+                            Read this value and use it in the lighting computation. 
+                            You can better observe the effect of the varying specular intensity when disabling color.
+                            After this subtask the scene should look like this:
+                        </p>
+                        <img class="floatRight" src="images/afterColor.png" width=600>
+                    </subtask>
+                    <subtask title="Normal Mapping in Per Vertex Tangent Space" points="2" type="advanced">
+                        <p>
+                            The normals stored in the normal texture are in tangent space.
+                            To use them, they have to be converted to world space with the TBN matrix.
+                            The TBN matrix is a 3x3 orthonormal matrix consisting of the tangent (T), bitangent (B), and normal (N) as column vectors.
+                            The normal N is already known for every vertex.
+                            In Exercise 5, you learned a way of constructing an orthonormal basis from a single unit vector.
+                            This does <b>not</b> work here, because there are indefnite possible orthonormal bases and we have to choose the one that was used when creating the normal map.
+                            Fortunately, every normal map aligns T and B to the texture coordinates.
+                        </p>
+                        <p>
+                            The tangent and bitangent for spheres with spherical texture coordinates (as we are using here) are very simple to compute.
+                            In object space, all T's are in the x-z plane (parallel to the equator) and all B's are perpendicular to T and N.
+                            Compute T and B for every vertex in <code>earth.glsl</code> like that:
+                            \[T = (0,1,0)^T \times N \]
+                            \[B = N \times T \]
+                            In the fragment shader, use the interpolated vectors to create the TBN matrix and use it to transform the normal read from the texture to world space.
+                            Hint: Don't forget to normalize each vector.
+                        </p>
+                        <p>
+                            Once you have implemented this part, you can see the result of normal mapping when you switch to 'Vertex TBN'. It should look like the following image:
+                        </p>
+                        <img class="floatRight" src="images/afterNormal.png" width=600>
+                    </subtask>
+                    <subtask title="Normal Mapping in Per Fragment Tangent Space" points="1" type="advanced">
+                        <p>
+                            As described above, the tangent, bitangent, and normal build an orthonomal basis aligned to the uv coordinates.
+                            When having knowledge about the partial screen space derivatives both of the
+                            world position ($p_x=(p_{x1},p_{x2},p_{x3}),p_y=(p_{y1},p_{y2},p_{y3})$) and of the respective texture coordinates ($c_x=(c_{x1},c_{x2}),c_y=(c_{y1},c_{y2})$),
+                            the tangent and bitangent can also be computed directly:
+                            \[ T = (p_y \times N) c_{x1} + (N \times p_x) c_{y1}\]
+                            \[ B = (p_y \times N) c_{x2} + (N \times p_x) c_{y2}\]
+                            The only problem right now is the computation of the screen space derivatives,
+                            because for example a central difference in x direction would require each fragment to know
+                            the values of the left and right neighbour.
+                            Fortunately, OpenGL provides the built-in functions <code>dFdx</code> and <code>dFdy</code>
+                            that do these derivatives for you.
+                            For example, <code>dFdx</code> takes as input a varying variable from the vertex shader and returns the central difference in x direction.
+                        </p>
+                        <p>
+                            Use <code>dFdx</code>, <code>dFdy</code>, and the formulas for normal mapping in the fragment shader.
+                            If you have implemented this task correctly, it should look <b>exactly</b> like the per vertex normal mapping of task 6.5c).
+                        </p>
+                    </subtask>
+                    <subtask title="Bump Mapping" points="1" type="advanced">
+                        <p>
+                            In addition to a normal map, we also added a height map of the earth in <code>earthBump</code>.
+                            You can use this height map to translate every vertex along its normal according to the height sample.
+                        </p>
+                        <p>
+                            Implement bump mapping in the vertex shader (= tesselation evaluation shader) of <code>earth.glsl</code>.
+                            Use the uniform <code>heightScale</code> to control the shifted distance.
+                            Translate the vertices in <b>objectSpace</b>.
+                        </p>
+                        <p>
+                            Play around with the 'tesselation factor' in the GUI to change the number of vertices and therefore the detail level of the earth surface.
+                            Different to normal mapping, bump mapping also alters the shape of the earth's silhouette:
+                        </p>
+                        <img class="floatRight" src="images/afterBump.png" width=600>
+                    </subtask>
+
+                    <subtask title="Clouds" points="1" type="advanced">
+                        <p>
+                            In this task you are asked to add clouds to our earth.
+                            The clouds are rendered in white with alpha blending enabled.
+                            Read the cloud map in <code>clouds.glsl</code> and set the alpha value appropriately to display smooth clouds.
+                            Make sure no clouds are visible on the night side of the earth
+                            and smoothly blend them in as you did with the day texture.
+                        </p>
+                        <p>
+                            Next, we want to add fake cloud shadows on the earth.
+                            Sample the cloud map in <code>earth.glsl</code> and diminish the incoming light
+                            on the earth surface according to the cloud map value.
+                            On the night side of the earth this shadowing should not have an effect.
+                            When you are done, the final image should look like this:
+                        </p>
+                        <img class="floatRight" src="images/afterClouds.png" width=600>
+                   
+                </task>
+
+
+            </exercise>
+        </content>
+    </page>
+</body>
