@@ -14,21 +14,17 @@ function Basic2(canvas, steps) {
         createScene(canvas, true);
     }
     
-    function createCube() {
-        // TODO 7.2a)   Set up a shape node, a cube node,
-        //              and a material node. Use the material node to 
-        //              define the color of the box as white.
-        //              Then, append the material node and the
-        //              cube node to the shape node. Return the
-        //              shape node.
-        //              You will have to make use of the functions
-        //              createElement(), setAttribute() and 
-        //              appendChild(). You can find examples for
-        //              their usage in createScene().
+function createCube() {
+    let shape = document.createElement("shape");
+    let cube = document.createElement("cube");
+    let material = document.createElement("material");
+    material.setAttribute("color", "1 1 1");
+    shape.appendChild(cube);
+    shape.appendChild(material);
+    return shape;
+}
 
-        let shape = document.createElement("shape");
-        return shape;
-    }
+
 
     function refine(parents) {
         // refine each of the transformations ("parents") into 12 single transformations
@@ -54,23 +50,14 @@ function Basic2(canvas, steps) {
         return children;
     }
 
-    function constructChildTransformation(parent, translation) {
-        // TODO 7.2b):  Create a new transformation node
-        //              for one child cube (or for further
-        //              refinement!). The child cube
-        //              has to be scaled to one third (use 0.33) of
-        //              its parent's size, and the translation
-        //              has to be applied. Finally, the 
-        //              new transformation should be appended
-        //              to its parent transformation.
-        //              Again, use createElement(), setAttribute()
-        //              and appendChild().
-        //              Replace the following dummy line
-        //              to return the newly created transform
-        //              instead of the parent transform.
+function constructChildTransformation(parent, translation) {
+    let child = document.createElement("transform");
+    child.setAttribute("scale", "0.33 0.33 0.33");
+    child.setAttribute("translation", translation);
+    parent.appendChild(child);
+    return child;
+}
 
-        return parent;
-    }
 
     function createScene(canvas, remove_children=false) {
         const sceneinfo = canvas.querySelector("sceneinfo");

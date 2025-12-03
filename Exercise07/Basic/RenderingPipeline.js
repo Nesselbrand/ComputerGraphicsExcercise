@@ -95,26 +95,41 @@ class DepthBuffer {
      * @param {number} depthTestMode - 0 = no depth test (always pass), 1 = pass if less, -1 = pass if greater
      * @returns {boolean} - true = depth test passes, false = depth test fails
      */
-    TestAndSetFragment(x, valueF, depthTestMode) {
-        // boundary check
-        if (x < 0 || x >= this.w) return false;
-        // convert float value to fixed point value
-        let value = this.ComputeFixedPointDepth(valueF);
+TestAndSetFragment(x, valueF, depthTestMode) {
+    if (x < 0 || x >= this.w) return false;
 
-        let newValue = value;
-        let oldValue = this.data[x];
+    let newValue = this.ComputeFixedPointDepth(valueF);
+    let oldValue = this.data[x];
 
-        // TODO 7.1     Implement the depth test based on the depth test mode 
-        //              (depthTestMode) and the depth value in fixed point representation.
-        //              depthTestMode: 0 = no depth test (always pass), 1 = pass if less, -1 = pass if greater
-        //              Depth testing takes place in the fragment shader.
-        if (true) { // adapt this condition
+    // 0 = kein Depth-Test
+    if (depthTestMode === 0) {
+        this.data[x] = newValue;
+        return true;
+    }
+
+    // 1 = pass if less
+    if (depthTestMode === 1) {
+        if (newValue < oldValue) {
             this.data[x] = newValue;
             return true;
         }
-
         return false;
     }
+
+    // -1 = pass if greater
+    if (depthTestMode === -1) {
+        if (newValue > oldValue) {
+            this.data[x] = newValue;
+            return true;
+        }
+        return false;
+    }
+
+    return false;
+}
+
+
+
 }
 
 
@@ -254,23 +269,27 @@ class RenderingPipeline {
      * @param {number[]} ibo - index buffer object. i.e. array of indices into vertex buffer, every 2 consecutive indices form a primitive
      * @returns {object[][]} - array of primitives in the form  primitives[i] = [vertexStream[idx_a], vertexStream[idx_b]]
      */
-    PrimitiveAssemblyStage(vertexStream, ibo) {
-        if (this.verbose) console.log("  Primitive Assembly Stage:");
-        if (this.verbose) console.log("    - #vertices [in]: " + vertexStream.length);
+PrimitiveAssemblyStage(vertexStream, ibo) {
+    if (this.verbose) console.log("  Primitive Assembly Stage:");
+    if (this.verbose) console.log("    - #vertices [in]: " + vertexStream.length);
 
-        // TODO 7.1     Implement the primitive assembly stage.
-        //              A primitive consists of two vertices (e.g. primitives[i] = [vertexStream[idx_a], vertexStream[idx_b];).
-        //              You have to iterate over all indices in the ibo (every two ibo entries form a primitive,
-        //              e.g. ibo[0] and ibo[1] are the indices of the first primitive).
-        //              The result can best be seen in the canonical volume.
-        let primitives = new Array(); // Also change the size of this array.
+    let primitives = new Array(ibo.length / 2);
 
+    for (let i = 0; i < ibo.length; i += 2) {
+        let idxA = ibo[i];
+        let idxB = ibo[i + 1];
 
-
-        if (this.verbose) console.log("    - #primitives [out]: " + primitives.length);
-
-        return primitives;
+        primitives[i/2] = [
+            vertexStream[idxA],
+            vertexStream[idxB]
+        ];
     }
+
+    if (this.verbose) console.log("    - #primitives [out]: " + primitives.length);
+
+    return primitives;
+}
+
 
     /**
      * For each primitive, perform line-culling
@@ -300,15 +319,33 @@ class RenderingPipeline {
      * @param {number[]} b - [x,z,w] homogeneous end point of the line primitive
      * @returns {boolean} - true = primitive should be culled,  false = primitive shouldn't be culled
      */
-    LineCulling(a, b) {
-        // TODO 7.1     Implement line culling depending on the culling mode (this.culling).
-        //              this.culling: 0 = no culling, 1 = backface culling, -1 = frontface culling
-        //              Culling takes place in the space of the canonical volume,
-        //              the result can also be viewed there.
-        //              You can assume that all primitives are defined consistently, following a
-        //              convention similar to the CCW convention for triangles in 3D.
-        return false; // Change this line: At the moment, nothing is culled.
+LineCulling(a, b) {
+    // 0 = kein Culling
+    if (this.culling === 0) return false;
+
+    // Tiefe in Canonical Volume (NDC entlang der Tiefenachse)
+    let depthA = a[1] / a[2];
+    let depthB = b[1] / b[2];
+
+    // Linien, die im Prinzip parallel zur Bildebene sind, nicht cullen
+    if (Math.abs(depthA - depthB) < 1e-6) return false;
+
+    // true, wenn die Linie von a nach b "von der Kamera weg" zeigt
+    let pointsAwayFromCamera = (depthB > depthA);
+
+    if (this.culling === 1) {
+        // backface culling: primitives, die von der Kamera WEG zeigen, verwerfen
+        return pointsAwayFromCamera;
+    } else if (this.culling === -1) {
+        // frontface culling: primitives, die ZUR Kamera zeigen, verwerfen
+        return !pointsAwayFromCamera;
     }
+
+    return false;
+}
+
+
+
 
     /**
      * For each primitive, perform line-clipping (discard if outside clip space)
