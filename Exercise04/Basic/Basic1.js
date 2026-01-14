@@ -18,20 +18,13 @@ function arrow(context, fromx, fromy, tox, toy) {
 ///////////////////////////
 
 function Basic1_1(canvas) {
-    
+
     /**
      * @param {number[]} point2D - 2D point [x,z], point to be projected
      * @returns {number} - projected x-coordinate
      */
     function OrthogonalProjection2D(point2D) {
-        // TODO 4.1a)   Implement the orthogonal projection.
-        //              The camera orientation is aligned with 
-        //              the global coordinate system, the view 
-        //              direction is the z axis. Note that point2D[0] 
-        //              is the x component and point2D[1] is the z 
-        //              component (Hint: have a look at the bottom left 
-        //              of the output image, there you will see the x-z axis).
-        return 0.0;
+        return point2D[0];
     }
 
     ////////////////////////////////////
@@ -80,7 +73,7 @@ function Basic1_1(canvas) {
         arrow(context, 15, 285, 45, 285);
         context.fillStyle = 'rgb(0,0,0)';
         context.fillText("X", 5, 260);
-        context.fillText("Z", 45, 297);    
+        context.fillText("Z", 45, 297);
     } else {
         imagePlane = 50;
         context.fillStyle = 'rgb(0,0,0)';
@@ -129,7 +122,7 @@ function Basic1_2(canvas, eye, imagePlane) {
      * @returns {number} - projected x-coordinate
      */
     function PerspectiveProjection2D(eye, imagePlane, point2D) {
-        
+
         // TODO 4.1b)   Implement the perspective projection assuming 
         //              the center of the camera lies in (eye[0], eye[1]).
         //              The camera orientation is aligned with the global 
@@ -139,13 +132,13 @@ function Basic1_2(canvas, eye, imagePlane) {
         //              gives you the z value of the image plane (You also have 
         //              to transform it to camera space coordinates.).
         return 0.0;
-        
+
     }
 
     ////////////////////////////////////
     // show results of the projection //
     ////////////////////////////////////
-    
+
     let context = canvas.getContext("2d", { willReadFrequently: true });
     if (canvas.id == "canvasBasic_1_2") {
         clearCanvas2d(canvas);
@@ -236,7 +229,7 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
      * a camera rendering a 2D scene to a 1D line
      */
     class Camera {
-        constructor(eye, fovy, near, far, lookAtPoint){
+        constructor(eye, fovy, near, far, lookAtPoint) {
             this.eye = eye;
             this.fovy = fovy;
             this.near = near;
@@ -279,13 +272,13 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
             //              into the negative view direction.
             //              Use column-major order!
 
-            let out = new Mat(  [0, 0, 0],
-                                [0, 0, 0],
-                                [0, 0, 0]
+            let out = new Mat([0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0]
             )
 
             return out;
-            
+
         };
 
         /**
@@ -339,8 +332,8 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
             context.beginPath();
             context.moveTo(p_near_0[1], p_near_0[0]);
             context.lineTo(p_near_1[1], p_near_1[0]);
-            context.lineTo(p_far_1[1],  p_far_1[0]);
-            context.lineTo(p_far_0[1],  p_far_0[0]);
+            context.lineTo(p_far_1[1], p_far_1[0]);
+            context.lineTo(p_far_0[1], p_far_0[0]);
             context.lineTo(p_near_0[1], p_near_0[0]);
             context.fill();
             context.stroke();
@@ -354,8 +347,8 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
 
             //text part
             if (canvas_id == "canvasBasic_1_3") {
-                context.fillText("near plane", p_near_1[1], p_near_1[0]+20);
-                context.fillText("far plane", p_far_1[1], p_far_1[0]+20);
+                context.fillText("near plane", p_near_1[1], p_near_1[0] + 20);
+                context.fillText("far plane", p_far_1[1], p_far_1[0] + 20);
                 context.fillText("eye", this.eye[1], this.eye[0] + 20);
             }
         }
@@ -386,16 +379,16 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
         }
 
         getWorldPointOnScreen(screenCoordinate) {
-           // near plane
+            // near plane
             let p_near_0 = this.cameraMatrixInverse.mul(new Vec(this.near * Math.sin(this.fovy / 2), -this.near, 1.0));
             let p_near_1 = this.cameraMatrixInverse.mul(new Vec(-this.near * Math.sin(this.fovy / 2), -this.near, 1.0));
 
             let alpha = screenCoordinate / 2.0 + 0.5;
 
-            return add(p_near_0.sca(alpha), p_near_1.sca(1.0-alpha));
+            return add(p_near_0.sca(alpha), p_near_1.sca(1.0 - alpha));
         }
     } //end of class Camera
-    
+
     // initialize
     fovy = fovy_factor / 180.0 * Math.PI;
     var camera = new Camera(eye, fovy, near, far, lookAtPoint);
@@ -418,7 +411,7 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
         showResults();
     }
 
-    function showResults(){
+    function showResults() {
         let context = canvas.getContext("2d", { willReadFrequently: true });
         if (canvas.id == "canvasBasic_1_3" || render_only_canonical_volume) {
             clearCanvas2d(canvas);
@@ -523,12 +516,12 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
             context.beginPath();
             context.strokeStyle = 'rgb(0,0,0)';
             context.fillStyle = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
-            let p = [   (-polygonProjected[polygonProjected.length - 1][0] / 2 + 0.5) * dim[0] + offset[0],
-                        (polygonProjected[polygonProjected.length - 1][1] / 2 + 0.5) * dim[1] + offset[1]];
+            let p = [(-polygonProjected[polygonProjected.length - 1][0] / 2 + 0.5) * dim[0] + offset[0],
+            (polygonProjected[polygonProjected.length - 1][1] / 2 + 0.5) * dim[1] + offset[1]];
             context.moveTo(p[1], p[0]);
             for (let i = 0; i < polygonProjected.length; ++i) {
-                p = [   (-polygonProjected[i][0] / 2 + 0.5) * dim[0] + offset[0],
-                        (polygonProjected[i][1] / 2 + 0.5) * dim[1] + offset[1]];
+                p = [(-polygonProjected[i][0] / 2 + 0.5) * dim[0] + offset[0],
+                (polygonProjected[i][1] / 2 + 0.5) * dim[1] + offset[1]];
                 context.lineTo(p[1], p[0]);
             }
             context.fill();
@@ -556,12 +549,12 @@ function Basic1_3(canvas, eye, fovy_factor, near, far, lookAtPoint, render_only_
             context.beginPath();
             context.strokeStyle = 'rgb(0,0,0)';
             context.fillStyle = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
-            let p = [   (-polygonProjected[polygonProjected.length - 1][0] / 2 + 0.5) * dim[0] + offset[0],
-                        (polygonProjected[polygonProjected.length - 1][1] / 2 + 0.5) * dim[1] + offset[1]];
+            let p = [(-polygonProjected[polygonProjected.length - 1][0] / 2 + 0.5) * dim[0] + offset[0],
+            (polygonProjected[polygonProjected.length - 1][1] / 2 + 0.5) * dim[1] + offset[1]];
             context.moveTo(p[1], p[0]);
             for (let i = 0; i < polygonProjected.length; ++i) {
-                p = [   (-polygonProjected[i][0] / 2 + 0.5) * dim[0] + offset[0],
-                        (polygonProjected[i][1] / 2 + 0.5) * dim[1] + offset[1]];
+                p = [(-polygonProjected[i][0] / 2 + 0.5) * dim[0] + offset[0],
+                (polygonProjected[i][1] / 2 + 0.5) * dim[1] + offset[1]];
                 context.lineTo(p[1], p[0]);
             }
             context.fill();

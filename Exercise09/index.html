@@ -1,0 +1,367 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/css/print.css">
+    <!-- explicitly set absent favicon to avoid error message with live server -->
+    <link rel="icon" href="data:,">
+
+    <meta name="lecture" content="Computer Graphics">
+    <meta name="exerciseNr" content="9">
+    <meta name="exercisePrefix" content="Exercise">
+    <meta name="term" content="Winter Term 2025/26">
+    <meta name="dueDate" content="January 19, 2026, 23:55">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <script type="text/javascript" src="./resources/js/num.js"></script>
+    <script type="text/javascript" src="./resources/js/FileSaver.js"></script>
+    <script type="text/javascript" src="./resources/js/jszip.js"></script>
+    <script type="text/javascript" src="./resources/js/dispatcher.js"></script>
+    <script type="text/javascript" src="./resources/js/sheet.js"></script>
+</head>
+
+
+<body>
+    <!-- global lists to help when saving the solution images TODO check if this can be removed by using the gernetSkeleton script? -->
+    <script>
+        // specify submission canvas ids that need to be saved to binaries (this will be done everytime the page is refreshed!)
+        window.saveIDsToBinaryList = ["canvas1a-1", "canvas1a-2", "canvas1b-1", "canvas1b-2", "canvas1c-1", "canvas1c-2", "canvas1c-3", "canvas1c-4"];
+    </script>
+    <script>
+        // specify submission (gl) canvas ids that need to be saved to binaries
+        window.saveGLIDsToImageList = [];
+    </script>
+
+    <!-- initialize session storage, if not yet populated -->
+    <script>
+        if (!sessionStorage.getItem("settings-linear-scale")) { sessionStorage.setItem("settings-linear-scale", 1.0); }
+    </script>
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Basic Exercises" title="Ray Tracing in 2D" points=10>
+                
+                <table class="pointsTable floatLeft" type="basic"></table>
+
+                <form class="differenceColor">
+                    <fieldset class="differenceColor">
+                        <h1>Difference Color</h1>
+                        <div>
+                            <input type="radio" id="settings-binary" name="diff-canvas-colors" value="binary" ex="basic" checked>
+                            <label for="settings-binary"> binary </label><br>
+                            <input type="radio" id="settings-linear" name="diff-canvas-colors" value="linear" ex="basic">
+                            <label for="settings-linear"> linear </label><br>
+                            <label for="settings-linear-scale"> Linear difference scale: <span id="settings-linear-scale-print"></span></label><br>
+                            <input type="range" id="settings-linear-scale" name="diff-canvas-scale" min="1.0" max="100" value="1.0" class="slider" onmouseup="location.reload()" ontouchend="location.reload()">
+                            <script>
+                                document.getElementById("settings-linear-scale").value = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale-print").innerHTML = sessionStorage.getItem('settings-linear-scale');
+                                document.getElementById("settings-linear-scale").oninput = function() {
+                                    sessionStorage.setItem("settings-linear-scale", this.value)
+                                    document.getElementById("settings-linear-scale-print").innerHTML = this.value;
+                                }
+                            </script>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <button class="zipButton" type="basic" onclick="zipAndDownload('Basic')"> zip basic submission </button>
+
+                <task title="Ray Tracing in 2D" points=10 submitfile="Basic1.js">
+
+                    <canvas class="floatRight" id="canvasBasic1" width=600 height=300 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=0 data-call-p1="c" data-call-p2=4>
+                        <img class="wait">
+                    </canvas>
+
+                    <p style="padding-left:3em">
+                        <b>Number of pixels:</b>
+                        <input type="range" id="nPixels" value="4" min="1" max="80"/>
+
+                        <b>Recursion depth:</b>
+                        <input type="range" id="nDepth" value="1" min="1" max="4"/>
+                        <br/>
+
+
+                        <b>Diffuse samples:</b>
+                        <input type="range" id="nSamples" value="2" min="1" max="4"/>
+
+                        <b>Show rays:</b>
+                        <input type="checkbox" id="showRays" checked />
+                    </p>
+
+
+                    <subtask title="Primary Ray Setup" points="2" type="basic">
+                        <p>
+                            In this subtask you should set up the primary rays to start backward ray tracing.
+                            A primary ray starts at the origin of the camera and shoots through a single pixel of the virtual sensor.
+                            In the <code>Basic1.Render()</code> function we iterate over all pixels of the virtual sensor.
+                            Follow the comments in the source code to set up one ray for each pixel and call the <code>traceRay(...)</code> function to start the ray tracing.
+                        </p>
+                        <p>
+                            Once you are done, you can change the number of pixels in the interactive canvas using the slider and have a look at the rays emanating from the camera.
+                            You should see the primary rays as gray dashed lines that do not yet interact with the scene.
+                            For this and the next subtask, the first testcase uses four pixels, the second one eight.
+                        </p>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1a-1" width=200 height=200 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=2 data-call-p1="a" data-call-p2=4></canvas></td>
+                                <td><canvas id="sol1a-1" src="images/sol1a-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1a-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-1" data-call-p1="sol1a-1" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1a-2" width=200 height=190 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=2 data-call-p1="a" data-call-p2=8></canvas></td>
+                                    <td><canvas id="sol1a-2" src="images/sol1a-2.bin" width="200" height="190"/></td>
+                                    <td><canvas id="diff1a-2" type="eval" width=200 height=190 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1a-2" data-call-p1="sol1a-2" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+
+                    <subtask title="Intersection with Scene Primitives (i.e. Lines)" points="3" type="basic">
+                        <p>
+                            In the previous subtask you called the <code>traceRay(...)</code> function.
+                            This function intersects the given ray with the scene and computes the color at this point.
+                            Your task is to implement the intersection function that intersects a ray with a line (<code>Line.intersect</code>).
+                            If you have implemented the previously mentioned functions you should now see the intersection points in addition to the primary rays.
+                            For intersections with diffuse objects (including the scene border), a ray to the light source is drawn, if it is not occluded.
+                        </p>
+
+                        <table class="centerContent boxes">
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1b-1" width=200 height=200 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=2 data-call-p1="b" data-call-p2=4></canvas></td>
+                                <td><canvas id="sol1b-1" src="images/sol1b-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1b-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-1" data-call-p1="sol1b-1" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1b-2" width=200 height=190 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=2 data-call-p1="b" data-call-p2=8></canvas></td>
+                                    <td><canvas id="sol1b-2" src="images/sol1b-2.bin" width="200" height="190"/></td>
+                                    <td><canvas id="diff1b-2" type="eval" width=200 height=190 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1b-2" data-call-p1="sol1b-2" data-call-p2="2" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+
+                    <subtask title="Ray Reflect Method" points="5" type="basic">
+                        <p>
+                            Until now, we have not considered indirect light.
+                            To do so, we have to shoot secondary rays and call the <code>traceRay(...)</code> function recursively.
+                            Your task is to implement the <code>Ray.reflect</code> function.
+                            Given an intersection point, we consider two cases: a perfect mirror and perfect diffuse material.
+                            A mirror perfectly reflects an incoming ray. Diffuse material reflects an incoming ray in a seeded random direction of the hemisphere around the normal.
+                            Follow the comments in the source code to implement this function. Note that the sloped boxes are always perfect mirrors in the testcases.
+                            If you have implemented the function you can use the recursion depth slider to adjust the recursion depth
+                            and the diffuse samples slider to adjust the number of random reflection samples of a diffuse reflection in the interactive canvas.
+                        </p>
+
+                        <table class="centerContent boxes">
+                            <caption>Indirect lighting from one light bounce.</caption>
+                            <tr> 
+                                <th><b>Your code</b></th>
+                                <th><b>Solution</b></th>
+                                <th><b>Difference</b></th>
+                            </tr>
+                            <tr>
+                                <td><canvas id="canvas1c-1" width=200 height=200 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=2 data-call-p1="c" data-call-p2=4 data-call-p3=2></canvas></td>
+                                <td><canvas id="sol1c-1" src="images/sol1c-1.bin" width="200" height="200"/></td>
+                                <td><canvas id="diff1c-1" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-1" data-call-p1="sol1c-1" data-call-p2="2" data-call-p3="100" data-call-p4="false"></canvas></td>
+                            </tr>
+                        </table>
+                        <details>
+                            <summary>Click here to show the other test cases!</summary>
+                            <table class="centerContent boxes">
+                                <caption>Indirect lighting from two light bounces.</caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1c-2" width=200 height=200 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=2 data-call-p1="c" data-call-p2=4 data-call-p3=3></canvas></td>
+                                    <td><canvas id="sol1c-2" src="images/sol1c-2.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1c-2" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-2" data-call-p1="sol1c-2" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                            <table class="centerContent boxes">
+                                <caption>Again only one light bounce with a mirror instead of the green box and more eye rays.</caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1c-3" width=200 height=200 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=1 data-call-p1="c" data-call-p2=8 data-call-p3=2></canvas></td>
+                                    <td><canvas id="sol1c-3" src="images/sol1c-3.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1c-3" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-3" data-call-p1="sol1c-3" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                            <table class="centerContent boxes">
+                                <caption>A lot more eye rays and two sloped mirrors funneling the rays towards the diffuse red box.</caption>
+                                <tr> 
+                                    <th><b>Your code</b></th>
+                                    <th><b>Solution</b></th>
+                                    <th><b>Difference</b></th>
+                                </tr>
+                                <tr>
+                                    <td><canvas id="canvas1c-4" width=200 height=200 data-call="Basic1" data-call-src="./Basic/Basic1.js" data-call-p0=3 data-call-p1="c" data-call-p2=16 data-call-p3=3></canvas></td>
+                                    <td><canvas id="sol1c-4" src="images/sol1c-4.bin" width="200" height="200"/></td>
+                                    <td><canvas id="diff1c-4" type="eval" width=200 height=200 data-call="errorMap" data-call-src="./resources/js/compare.js" data-call-p0="canvas1c-4" data-call-p1="sol1c-4" data-call-p2="1" data-call-p3="100" data-call-p4="false"></canvas></td>
+                                </tr>
+                            </table>
+                        </details>
+                    </subtask>
+
+                </task>
+
+            </exercise>
+        </content>
+    </page>
+
+
+    <page size="A4">
+        <content>
+
+            <exercise prefix="Advanced Exercises" title="Raytracing 1" points=10>
+                <p>
+                    In this exercise you will learn how to create an image by raytracing a three-dimensional scene.
+                    The image will contain diffuse illumination and shadows.
+                </p>
+                <p>
+                    You can switch between rasterization and raytracing by pressing <code>space</code>.
+                    The rasterized result contains a sphere instead of the spikeball present in the raytraced scene,
+                    and utilizes a simpler illumination model.
+                    Therefore, the rasterized result does not serve as a reference solution,
+                    but you can check whether your intersection tests are correct by comparing the sphere positions and sizes between rasterized and raytraced output.
+                </p>
+
+                <task title="Intersections, Diffuse Illumination and Shadows" points=10 submitfile="intersection_plane_sphere.glsl, rt.glsl">
+                    <p>
+                    </p>
+                    <subtask title="Primary Rays" points="1" type="advanced">
+                        <p>
+                            For every pixel, one ray is cast into the scene. This first ray is called the primary ray.
+                            Compute the origin and direction of the primary ray in the <code>main</code> function of the fragment shader in <code>rt.glsl</code>.
+                            <ul>
+                                <li> Backproject the current fragment to world space using the <code>projView</code> matrix.</li>
+                                <li> The origin is the camera position stored in the uniform <code>cameraPos</code>. </li>
+                            </ul>
+                        </p>
+                        <p>
+                            After this task you should be able to see the sky and - once you have turned the camera around - also the sun.
+                        </p>
+                        <img class="floatRight" style="border:none" src="images/0.png" width=600>
+                    </subtask>
+
+                    <subtask title="Ray-Plane Intersection" points="2" type="advanced">
+                        <p>
+                            Compute the ray-plane intersection in the function <code>intersectRayPlane</code> in <code>intersection_plane_sphere.glsl</code> 
+                            by solving the following equation for $p$ (the intersection point) and $t$ (the distance of the intersection point from the ray origin):
+                            \[ dt + o = p \]
+                            \[ t > 0 \]
+                            \[ p \cdot n = k \]                            
+                            The ray is given by the origin $o$ and the direction $d$.
+                            The plane is given by the normal $n$ and the distance $k$ to the origin.
+                        </p>
+                        <p>
+                            After this subtask and also the following one (c), you will not be able to see any change in the output. 
+                            The output will only change once subtask d is complete!
+                        </p>
+                    </subtask>
+                    <subtask title="Ray-Sphere Intersection" points="2" type="advanced">
+                        <p>
+                            Compute the ray-sphere intersection in the function <code>intersectRaySphere</code> in <code>intersection_plane_sphere.glsl</code> by solving the following equation for $p$ and $t$:
+                            \[ dt + o = p \]
+                            \[ t > 0 \]
+                            \[ |p - c|^2 = r^2 \]
+
+                            The sphere is defined by the center $c$ and radius $r$. 
+                            When there are two solutions for the equation, choose the solution that is closer to the ray origin.
+                            Use the following rule for the algebraic transformations:
+                            \[ |a + b|^2 = |a|^2 + 2(a \cdot b) + |b|^2 \]
+                        </p>
+                    </subtask>
+
+                    <subtask title="Ray-Scene Intersection" points="2" type="advanced">
+                        <p>
+                            The function <code>intersectScene</code> in <code>rt.glsl</code> computes the closest intersection point of a ray with the complete scene. The returned integer is the ID of the intersected object. If no intersection is found, -1 is returned.
+                        </p>
+                        <p>
+                            Call the intersection functions for all spheres, the plane, and the spikey ball. Keep track of the closest intersection point. Store the <code>IntersectionResult</code> object for the closest intersection in the parameter <code>out inter</code>.
+                        </p>
+                        <p>
+                            If you have implemented everything correctly so far the image should look like this:
+                        </p>
+                        <img class="floatRight" style="border:none" src="images/1.png" width=600>
+                    </subtask>
+
+                    <subtask title="Illumination" points="1" type="advanced">
+                        <p>
+                            Compute a Phong shading with diffuse, specular, and ambient term when an object is hit. 
+                            The light source is a white directional light coming from the direction <code>lightDir</code>.
+                            The surface normal is stored in the intersection struct and the object color is stored in the material.
+                        </p>
+                        <img class="floatRight" style="border:none" src="images/2.png" width=600>
+                    </subtask>
+                    <subtask title="Shadows" points="2" type="advanced">
+                        <p>
+                            We can add hard shadows to the scene in the following way: If the primary ray has hit an object,
+                            shoot a "shadow ray" towards the light source and check if there is an object in between.
+                            The diffuse and specular illumination from the previous step is now only added when nothing was hit (in our case: <code>objectId = -1</code>).
+                            The uniform <code>shadowFactor</code> interpolates completely black shadows (<code>shadowFactor=1</code>) to no shadows (<code>shadowFactor=0</code>).
+                        </p>
+                        <p>
+                            Implementation hints for the shadow ray:
+                            <ul>
+                                <li>Translate the origin of the shadow-ray epsilon along the normal direction to avoid self-shadowing. </li>
+                                <li>The direction is the negative light direction. </li>
+                            </ul>
+                        </p>
+                        <img class="floatRight" style="border:none" src="images/3.png" width=600>
+                    </subtask>
+                </task>
+
+
+
+            </exercise>
+        </content>
+    </page>
+</body>
