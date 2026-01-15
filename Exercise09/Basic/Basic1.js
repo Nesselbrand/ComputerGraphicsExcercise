@@ -169,38 +169,35 @@ function Basic1(canvas, pSceneID, pIntersectObjects, pIndirectLight, pMaxRecursi
          * @returns {Ray|null} reflected ray (if exists)
          */
         reflect(intersection) {
+            const EPS = 0.001;
 
-            // TODO 9.1c)   Implement the reflection function for perfect diffuse and perfect reflecting material.
-            //              Make use of the attributes of the intersection (see definition above).
+            const n = intersection.normal.normalized();
+            const d = this.dir.normalized();
 
             switch (intersection.material.type) {
-                case MaterialType.perfectMirror:
-                    {
-                        // TODO: Reflect the ray perfectly!
-                        // ...
-                        // return new Ray(intersection.point, reflectedDir, this.generation + 1);
 
-                    }
-                    break;
-                case MaterialType.perfectDiffuse:
-                    {
-                        // TODO: Reflect the ray to a random direction in the hemisphere around the intersection normal!
-                        // Hint: - Use deterministicRandom() to generate a seeded random number in [0, 1].
-                        //       - To sample a direction in the hemisphere around the normal,
-                        //         you can rotate the normal with a random angle between [-PI/2, +PI/2].
-                        //         To do so you can use the helper function rotationMatrix()!
-                        //         (the result of which you can apply to the normal by using Mat.mul(vec) from num.js)
-                        // ...
-                        // return new Ray(intersection.point, reflectedDir, this.generation + 1);
+                case MaterialType.perfectMirror: {
+                    const r = d.sub(n.sca(2.0 * d.dot(n))).normalized();
 
+                    const origin = intersection.point.add(r.sca(EPS));
+                    return new Ray(origin, r, this.generation + 1, EPS, 10000.0);
+                }
 
-                    }
-                    break;
+                case MaterialType.perfectDiffuse: {
+                    const xi = deterministicRandom();
+                    const angle = (xi - 0.5) * Math.PI;
+                    const R = rotationMatrix(angle);
+                    let r = R.mul(n).normalized();
+                    if (r.dot(n) < 0.0) r = r.sca(-1.0);
+                    const origin = intersection.point.add(r.sca(EPS));
+                    return new Ray(origin, r, this.generation + 1, EPS, 10000.0);
+                }
             }
-
 
             return null;
         }
+
+
 
         /**
          * Draw a dashed line representing the ray (bound by t_min and t_max) to the context. (shadow rays in yellow (generation==-1), others gray)
@@ -277,27 +274,47 @@ function Basic1(canvas, pSceneID, pIntersectObjects, pIndirectLight, pMaxRecursi
          * @param {Ray} ray -
          * @returns {Intersection|null} - depending on if intersection btw. line and ray exists (in the specified ray bounds t_min t_max)
          */
-        intersect(ray) {
-            let result = null;
+intersect(ray) {
+    let result = null;
 
-            let lineDir = this.direction();
-            if (!isVecParallel(lineDir, ray.dir)) {
+    // Ray:     p + t*r
+    // Segment: q + u*s,   u in [0,1]
+    const p = ray.p0;
+    const r = ray.dir;                 // normalized
+    const q = this.p0;
+    const s = this.p1.sub(this.p0);    // segment direction (not normalized)
 
-                // TODO 9.1b)   Intersect the ray with the line.
-                //              If there is an intersection, return an Intersection "object",
-                //              e.g. result = new Intersection(t_intersect, this.material, this.normal(), intersectionPoint);!
-                //              Only handle the case where you have a single intersection or no intersection (ray is not parallel to line).
-                //              (HINT: Use the isVecParallel() helper function)
-                //              You want to use num.js to perform matrix-vector mulitplication and matrix inversion.
-                //              (Mat.mul(vec) and Mat.inv() respectively)
-                //              Also be sure to check whether the distance of the intersection lies between t_min and t_max.
+    // 2D cross product (scalar)
+    const cross2 = (a, b) => a[0] * b[1] - a[1] * b[0];
 
+    const rxs = cross2(r, s);
+    const q_p = q.sub(p);
 
+    const EPS = 1e-8;
+    if (Math.abs(rxs) < EPS) {
+        // Parallel (or nearly parallel) -> no single intersection
+        return null;
+    }
 
-            }
+    const t = cross2(q_p, s) / rxs;
+    const u = cross2(q_p, r) / rxs;
 
-            return result;
-        }
+    // Check ray bounds and segment bounds
+    if (t >= ray.t_min && t <= ray.t_max && u >= 0.0 && u <= 1.0) {
+        const hitPoint = ray.eval(t);
+
+        // Line normal (perpendicular to segment)
+        let n = new Vec(-s[1], s[0]).normalized();
+
+        // Flip normal so it opposes the incoming ray direction
+        if (n.dot(r) > 0.0) n = n.sca(-1.0);
+
+        result = new Intersection(t, this.material, n, hitPoint);
+    }
+
+    return result;
+}
+
     }
 
 
@@ -881,26 +898,16 @@ function Basic1(canvas, pSceneID, pIntersectObjects, pIndirectLight, pMaxRecursi
         let backgroundColor = new Vec(0.0, 0.0, 0.0);
         let pixelColors = [];
 
-        // iterate over all pixels of the virtual sensor
-        // iterate over all pixels of the virtual sensor
         for (let pixelIdx = 0; pixelIdx < nPixels; ++pixelIdx) {
-            // compute pixel position in world space
             let y = pixelSize * (pixelIdx - nPixels / 2.0 + 0.5);
             let pixelPos = eye.add(viewDir.sca(nearPlane)).add(sensorSpan.sca(y));
-
-            // TODO 9.1a) Set up primary ray
-            let dir = pixelPos.sub(eye);          // direction from eye through pixel
-            let ray = new Ray(eye, dir, 0);       // primary ray, generation = 0
-
-            // TODO 9.1a) Start ray tracing
+            let dir = pixelPos.sub(eye);          
+            let ray = new Ray(eye, dir, 0);      
             let pixelColor = traceRay(ray, 0, 1.0);
-
             if (pixelColor) pixelColors.push(pixelColor);
             else pixelColors.push(backgroundColor);
         }
 
-
-        // draw pixels
         for (let pixelIdx = 0; pixelIdx < nPixels; ++pixelIdx) {
             // compute pixel position in world space
             let y = pixelSize * (pixelIdx - nPixels / 2.0);
